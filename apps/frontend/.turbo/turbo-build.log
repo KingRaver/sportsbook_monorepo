@@ -1,0 +1,37 @@
+
+> sportsbook-frontend@0.1.0 build
+> next build
+
+   ▲ Next.js 15.5.9
+   - Experiments (use with caution):
+     · optimizePackageImports
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 5.6s
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/6) ...
+   Generating static pages (1/6) 
+   Generating static pages (2/6) 
+   Generating static pages (4/6) 
+ ✓ Generating static pages (6/6)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+┌ ○ /                                      136 B         102 kB
+├ ○ /_not-found                            988 B         103 kB
+├ ƒ /[sport]                               136 B         102 kB
+├ ƒ /[sport]/[marketId]                   2.2 kB         115 kB
+├ ƒ /[sport]/markets                       136 B         102 kB
+├ ƒ /api/chainlink/markets                 136 B         102 kB
+└ ƒ /api/x402/place-bet                    136 B         102 kB
++ First Load JS shared by all             102 kB
+  ├ chunks/18-a0e0267f22a67d87.js        45.8 kB
+  ├ chunks/87c73c54-beb8c3352f017ae5.js  54.2 kB
+  └ other shared chunks (total)          1.86 kB
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

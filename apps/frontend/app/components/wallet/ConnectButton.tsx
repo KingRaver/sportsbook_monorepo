@@ -33,7 +33,6 @@ export function ConnectButton() {
                 >
                     {connector.name}
                     {!connector.ready && ' (unsupported)'}
-                    {isPending === connector.id && ' (connecting)'}
                 </Button>
             ))}
         </div>
