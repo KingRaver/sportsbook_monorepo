@@ -339,7 +339,6 @@ export default function MarketDetail() {
                                     <BetSlip
                                         marketId={marketId}
                                         sport={sport}
-                                        disabled={!isConnected}
                                     />
                                 )}
                             </div>
