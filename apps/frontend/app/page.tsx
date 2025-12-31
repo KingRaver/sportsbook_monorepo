@@ -86,235 +86,302 @@ export default function Home() {
     }
 
     return (
-        <div className="min-h-screen text-slate-800 overflow-hidden" style={{ background: '#FEF9F3' }}>
-            {/* Subtle background texture */}
-            <div className="fixed inset-0 pointer-events-none">
-                {/* Warm gradient overlay */}
+        <div className="min-h-screen overflow-hidden relative">
+            {/* Dreamy gradient background */}
+            <div className="fixed inset-0">
+                {/* Main gradient - pink to cyan */}
                 <div
                     className="absolute inset-0"
                     style={{
-                        background: 'linear-gradient(135deg, #FEF9F3 0%, #FDF2E9 50%, #F5EBE0 100%)'
+                        background: 'linear-gradient(180deg, #FFB6C1 0%, #E0BBE4 25%, #957DAD 50%, #7EC8E3 75%, #7FE5F0 100%)'
                     }}
                 />
-                {/* Soft decorative shapes */}
+                {/* Grid overlay */}
                 <div
-                    className="absolute top-20 right-20 w-96 h-96 rounded-full opacity-30 blur-3xl"
-                    style={{ background: 'linear-gradient(135deg, #14B8A6, #06B6D4)' }}
-                />
-                <div
-                    className="absolute bottom-20 left-20 w-80 h-80 rounded-full opacity-20 blur-3xl"
-                    style={{ background: 'linear-gradient(135deg, #F97373, #FB923C)' }}
-                />
-                {/* Subtle wave pattern at bottom */}
-                <div
-                    className="absolute bottom-0 left-0 right-0 h-64 opacity-5"
+                    className="absolute inset-0 opacity-30"
                     style={{
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%2314B8A6' d='M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E")`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'bottom'
+                        backgroundImage: `
+              linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px)
+            `,
+                        backgroundSize: '40px 40px'
                     }}
                 />
+                {/* Floating clouds/sparkles */}
+                <div className="absolute top-20 left-[10%] text-4xl opacity-60 animate-pulse">✦</div>
+                <div className="absolute top-40 right-[15%] text-3xl opacity-50 animate-pulse" style={{ animationDelay: '1s' }}>☁️</div>
+                <div className="absolute top-60 left-[25%] text-2xl opacity-40 animate-pulse" style={{ animationDelay: '0.5s' }}>✧</div>
+                <div className="absolute bottom-40 right-[25%] text-3xl opacity-50 animate-pulse" style={{ animationDelay: '1.5s' }}>✦</div>
+                <div className="absolute bottom-60 left-[15%] text-4xl opacity-40 animate-pulse" style={{ animationDelay: '2s' }}>☁️</div>
             </div>
 
-            {/* Header */}
-            <header className="relative z-10 border-b border-slate-200/60 bg-white/70 backdrop-blur-xl">
-                <div className="flex items-center justify-between px-6 h-16">
-                    <div className="flex items-center gap-8">
-                        <Link href="/" className="flex items-center gap-3 group">
-                            <div
-                                className="w-10 h-10 rounded-xl flex items-center justify-center text-xl font-black text-white shadow-lg transition-transform group-hover:scale-105"
+            {/* Header - Retro window style */}
+            <header className="relative z-10 mx-4 mt-4">
+                <div
+                    className="rounded-t-lg overflow-hidden"
+                    style={{
+                        background: 'linear-gradient(180deg, #E0BBE4 0%, #D4A5D9 100%)',
+                        border: '2px solid #C9A0DC'
+                    }}
+                >
+                    {/* Window title bar */}
+                    <div
+                        className="flex items-center justify-between px-3 py-1.5"
+                        style={{ background: 'linear-gradient(180deg, #C9A0DC 0%, #B794C0 100%)' }}
+                    >
+                        <span className="text-xs font-bold text-white/90 tracking-wide">MICROBETS.EXE</span>
+                        <div className="flex gap-1">
+                            <div className="w-3 h-3 rounded-sm bg-white/40 flex items-center justify-center text-[8px]">−</div>
+                            <div className="w-3 h-3 rounded-sm bg-white/40 flex items-center justify-center text-[8px]">□</div>
+                            <div className="w-3 h-3 rounded-sm bg-pink-300 flex items-center justify-center text-[8px]">×</div>
+                        </div>
+                    </div>
+                    {/* Main header content */}
+                    <div className="flex items-center justify-between px-4 py-3 bg-white/80 backdrop-blur-sm">
+                        <div className="flex items-center gap-6">
+                            <Link href="/" className="flex items-center gap-2 group">
+                                <div
+                                    className="w-9 h-9 rounded-lg flex items-center justify-center text-lg font-black text-white"
+                                    style={{
+                                        background: 'linear-gradient(135deg, #FF6B9D, #C44569)',
+                                        boxShadow: '0 2px 10px rgba(196, 69, 105, 0.3)'
+                                    }}
+                                >
+                                    μ
+                                </div>
+                                <span className="text-lg font-black tracking-tight">
+                                    <span style={{ color: '#C44569' }}>MICRO</span>
+                                    <span style={{ color: '#957DAD' }}>BETS</span>
+                                </span>
+                            </Link>
+                            <nav className="hidden md:flex items-center gap-1">
+                                {['Live', 'Sports', 'Esports', 'Casino'].map((item, i) => (
+                                    <Link
+                                        key={item}
+                                        href={item === 'Live' ? '/live' : '#'}
+                                        className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${i === 0
+                                                ? 'text-white'
+                                                : 'text-purple-400 hover:text-purple-600 hover:bg-purple-100'
+                                            }`}
+                                        style={i === 0 ? {
+                                            background: 'linear-gradient(135deg, #FF6B9D, #C44569)',
+                                            boxShadow: '0 2px 8px rgba(196, 69, 105, 0.25)'
+                                        } : {}}
+                                    >
+                                        {i === 0 && <span className="inline-block w-1.5 h-1.5 bg-white rounded-full mr-1.5 animate-pulse" />}
+                                        {item}
+                                    </Link>
+                                ))}
+                            </nav>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <button
+                                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all"
+                                style={{ background: '#E0BBE4', color: '#6B4C7A' }}
+                            >
+                                <span>🔍</span>
+                                Search
+                            </button>
+                            <button
+                                className="px-4 py-2 rounded-full text-sm font-bold text-white transition-all hover:scale-105"
                                 style={{
-                                    background: 'linear-gradient(135deg, #14B8A6, #0D9488)',
-                                    boxShadow: '0 4px 14px rgba(20, 184, 166, 0.35)'
+                                    background: 'linear-gradient(135deg, #7EC8E3, #5BA4C9)',
+                                    boxShadow: '0 2px 10px rgba(126, 200, 227, 0.35)'
                                 }}
                             >
-                                μ
-                            </div>
-                            <span className="text-xl font-black tracking-tight">
-                                <span style={{ color: '#0D9488' }}>MICRO</span>
-                                <span className="text-slate-400">BETS</span>
-                            </span>
-                        </Link>
-                        <nav className="hidden md:flex items-center gap-1">
-                            {['Live', 'Sports', 'Esports', 'Casino'].map((item, i) => (
-                                <Link
-                                    key={item}
-                                    href={item === 'Live' ? '/live' : '#'}
-                                    className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${i === 0
-                                            ? 'text-white shadow-md'
-                                            : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
-                                        }`}
-                                    style={i === 0 ? {
-                                        background: 'linear-gradient(135deg, #14B8A6, #0D9488)',
-                                        boxShadow: '0 2px 10px rgba(20, 184, 166, 0.3)'
-                                    } : {}}
-                                >
-                                    {i === 0 && <span className="inline-block w-2 h-2 bg-white rounded-full mr-2 animate-pulse" />}
-                                    {item}
-                                </Link>
-                            ))}
-                        </nav>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <button className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 text-slate-600 text-sm font-medium hover:bg-slate-200 transition-all">
-                            <span>🔍</span>
-                            Search
-                        </button>
-                        <button
-                            className="px-5 py-2.5 rounded-xl text-sm font-bold text-white shadow-lg hover:scale-105 transition-all"
-                            style={{
-                                background: 'linear-gradient(135deg, #F97373, #F87171)',
-                                boxShadow: '0 4px 14px rgba(249, 115, 115, 0.35)'
-                            }}
-                        >
-                            Connect Wallet
-                        </button>
+                                Connect Wallet
+                            </button>
+                        </div>
                     </div>
                 </div>
             </header>
 
-            <div className="relative z-10 flex">
+            <div className="relative z-10 flex px-4 pb-4">
                 {/* Sidebar */}
-                <aside className="hidden lg:flex flex-col w-20 border-r border-slate-200/60 bg-white/50 backdrop-blur-xl min-h-[calc(100vh-64px)]">
-                    <div className="flex flex-col items-center py-4 gap-1">
-                        {sports.map((sport) => (
-                            <button
-                                key={sport.name}
-                                onClick={() => setSelectedSport(sport.name)}
-                                className={`group relative w-14 h-14 rounded-xl flex flex-col items-center justify-center transition-all ${selectedSport === sport.name
-                                        ? 'bg-white shadow-lg'
-                                        : 'hover:bg-white/60'
-                                    }`}
-                                style={selectedSport === sport.name ? {
-                                    boxShadow: '0 4px 20px rgba(20, 184, 166, 0.15)'
-                                } : {}}
-                            >
-                                <span className="text-2xl">{sport.icon}</span>
-                                <span
-                                    className="absolute -top-1 -right-1 w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center text-white shadow-md"
-                                    style={{ background: '#14B8A6' }}
+                <aside className="hidden lg:block w-20 mr-4 mt-4">
+                    <div
+                        className="rounded-lg overflow-hidden"
+                        style={{
+                            background: 'rgba(255,255,255,0.85)',
+                            border: '2px solid #E0BBE4',
+                            backdropFilter: 'blur(10px)'
+                        }}
+                    >
+                        <div
+                            className="px-2 py-1 text-[10px] font-bold text-center text-white"
+                            style={{ background: 'linear-gradient(180deg, #C9A0DC 0%, #B794C0 100%)' }}
+                        >
+                            SPORTS
+                        </div>
+                        <div className="flex flex-col items-center py-2 gap-1">
+                            {sports.map((sport) => (
+                                <button
+                                    key={sport.name}
+                                    onClick={() => setSelectedSport(sport.name)}
+                                    className={`group relative w-12 h-12 rounded-lg flex flex-col items-center justify-center transition-all ${selectedSport === sport.name
+                                            ? 'bg-gradient-to-br from-pink-200 to-purple-200'
+                                            : 'hover:bg-purple-50'
+                                        }`}
                                 >
-                                    {sport.count > 99 ? '99+' : sport.count}
-                                </span>
-                                {/* Tooltip */}
-                                <div className="absolute left-full ml-2 px-3 py-1.5 rounded-lg bg-slate-800 text-white text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50">
-                                    {sport.name}
-                                </div>
-                                {/* Active indicator */}
-                                {selectedSport === sport.name && (
+                                    <span className="text-xl">{sport.icon}</span>
+                                    <span
+                                        className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-[9px] font-bold flex items-center justify-center text-white"
+                                        style={{ background: '#FF6B9D' }}
+                                    >
+                                        {sport.count > 99 ? '99' : sport.count}
+                                    </span>
+                                    {/* Tooltip */}
                                     <div
-                                        className="absolute -left-[1px] top-1/2 -translate-y-1/2 w-1 h-8 rounded-r-full"
-                                        style={{ background: '#14B8A6' }}
-                                    />
-                                )}
-                            </button>
-                        ))}
+                                        className="absolute left-full ml-2 px-2 py-1 rounded text-[10px] font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50 text-white"
+                                        style={{ background: '#957DAD' }}
+                                    >
+                                        {sport.name}
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 </aside>
 
                 {/* Main Content */}
-                <main className="flex-1 p-6 overflow-auto">
-                    {/* Hero Banner */}
+                <main className="flex-1 mt-4 space-y-4">
+                    {/* Hero Banner - Window style */}
                     <div
-                        className="relative rounded-3xl overflow-hidden mb-6 shadow-xl"
+                        className="rounded-lg overflow-hidden"
                         style={{
-                            background: 'linear-gradient(135deg, #14B8A6 0%, #0D9488 50%, #0F766E 100%)'
+                            border: '2px solid #7EC8E3'
                         }}
                     >
-                        {/* Decorative pattern */}
+                        {/* Window title bar */}
                         <div
-                            className="absolute inset-0 opacity-10"
+                            className="flex items-center justify-between px-3 py-1.5"
+                            style={{ background: 'linear-gradient(180deg, #7EC8E3 0%, #5BA4C9 100%)' }}
+                        >
+                            <span className="text-xs font-bold text-white/90 tracking-wide">✦ WELCOME.AVI</span>
+                            <div className="flex gap-1">
+                                <div className="w-3 h-3 rounded-sm bg-white/40"></div>
+                                <div className="w-3 h-3 rounded-sm bg-white/40"></div>
+                                <div className="w-3 h-3 rounded-sm bg-pink-300"></div>
+                            </div>
+                        </div>
+                        <div
+                            className="relative p-6 md:p-10"
                             style={{
-                                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+                                background: 'linear-gradient(135deg, #FFE4EC 0%, #E8D5E0 50%, #D4E7ED 100%)'
                             }}
-                        />
-                        <div className="relative p-8 md:p-12">
+                        >
+                            {/* Decorative elements */}
+                            <div className="absolute top-4 right-4 text-5xl opacity-30">🌙</div>
+                            <div className="absolute bottom-4 right-20 text-3xl opacity-20">✦</div>
+
                             <div className="max-w-2xl">
-                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 text-white/90 text-xs font-semibold mb-4 backdrop-blur-sm">
-                                    <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
+                                <div
+                                    className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold mb-4"
+                                    style={{ background: 'rgba(255,107,157,0.2)', color: '#C44569' }}
+                                >
+                                    <span className="w-1.5 h-1.5 bg-pink-400 rounded-full animate-pulse" />
                                     NEW SEASON
                                 </div>
-                                <h1 className="text-4xl md:text-5xl font-black mb-4 leading-tight text-white">
+                                <h1
+                                    className="text-4xl md:text-5xl font-black mb-4 leading-tight"
+                                    style={{ color: '#6B4C7A' }}
+                                >
                                     Micro-Bets Live
                                 </h1>
-                                <p className="text-lg text-white/80 mb-6 max-w-xl">
+                                <p className="text-base mb-6 max-w-xl" style={{ color: '#8B7A94' }}>
                                     x402 payments + Chainlink oracles on Cronos. Bet on every point, kill, corner.
-                                    <span className="text-white font-semibold"> Sub-second settlement.</span>
+                                    <span style={{ color: '#C44569' }} className="font-semibold"> Sub-second settlement.</span>
                                 </p>
                                 <div className="flex flex-wrap gap-3">
                                     <Link
                                         href="/live"
-                                        className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-teal-700 bg-white shadow-lg hover:shadow-xl hover:scale-105 transition-all"
+                                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-white shadow-lg hover:scale-105 transition-all"
+                                        style={{
+                                            background: 'linear-gradient(135deg, #FF6B9D, #C44569)',
+                                            boxShadow: '0 4px 15px rgba(196, 69, 105, 0.3)'
+                                        }}
                                     >
                                         <span>⚡</span>
                                         Enter Live Arena
                                     </Link>
-                                    <button className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/20 text-white font-semibold hover:bg-white/30 backdrop-blur-sm transition-all">
+                                    <button
+                                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold transition-all hover:bg-purple-100"
+                                        style={{ background: 'white', color: '#957DAD', border: '2px solid #E0BBE4' }}
+                                    >
                                         How It Works
                                     </button>
                                 </div>
-                            </div>
-                            {/* Decorative elements */}
-                            <div className="absolute top-4 right-4 md:top-8 md:right-8 text-6xl md:text-8xl opacity-20">
-                                🌴
                             </div>
                         </div>
                     </div>
 
                     {/* Feature Pills */}
-                    <div className="flex flex-wrap gap-3 mb-6">
+                    <div className="flex flex-wrap gap-3">
                         {[
-                            { icon: '⚡', label: '402 Tickets', desc: 'HTTP 402 Payments', color: '#F97373' },
-                            { icon: '🔗', label: 'Chainlink', desc: 'Oracle Settlement', color: '#14B8A6' },
-                            { icon: '⚫', label: 'Cronos', desc: 'Sub-second Blocks', color: '#6366F1' },
+                            { icon: '⚡', label: '402 Tickets', desc: 'HTTP 402 Payments', color: '#FF6B9D' },
+                            { icon: '🔗', label: 'Chainlink', desc: 'Oracle Settlement', color: '#7EC8E3' },
+                            { icon: '⚫', label: 'Cronos', desc: 'Sub-second Blocks', color: '#957DAD' },
                         ].map((feature) => (
                             <div
                                 key={feature.label}
-                                className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-white shadow-sm border border-slate-100 hover:shadow-md transition-shadow"
+                                className="flex items-center gap-3 px-4 py-2.5 rounded-full transition-all hover:scale-105"
+                                style={{
+                                    background: 'rgba(255,255,255,0.85)',
+                                    border: '2px solid #E0BBE4',
+                                    backdropFilter: 'blur(10px)'
+                                }}
                             >
                                 <div
-                                    className="w-10 h-10 rounded-xl flex items-center justify-center text-lg"
-                                    style={{ background: `${feature.color}15` }}
+                                    className="w-8 h-8 rounded-full flex items-center justify-center text-sm"
+                                    style={{ background: `${feature.color}20` }}
                                 >
                                     {feature.icon}
                                 </div>
                                 <div>
-                                    <div className="text-sm font-bold text-slate-800">{feature.label}</div>
-                                    <div className="text-xs text-slate-400">{feature.desc}</div>
+                                    <div className="text-sm font-bold" style={{ color: '#6B4C7A' }}>{feature.label}</div>
+                                    <div className="text-xs" style={{ color: '#957DAD' }}>{feature.desc}</div>
                                 </div>
                             </div>
                         ))}
                     </div>
 
-                    {/* Live Matches Section */}
-                    <div className="mb-6">
-                        <div className="flex items-center justify-between mb-4">
-                            <div className="flex items-center gap-3">
-                                <h2 className="text-xl font-bold text-slate-800">Live Matches</h2>
+                    {/* Live Matches Section - Window style */}
+                    <div
+                        className="rounded-lg overflow-hidden"
+                        style={{ border: '2px solid #E0BBE4' }}
+                    >
+                        {/* Window title bar */}
+                        <div
+                            className="flex items-center justify-between px-3 py-1.5"
+                            style={{ background: 'linear-gradient(180deg, #E0BBE4 0%, #C9A0DC 100%)' }}
+                        >
+                            <div className="flex items-center gap-2">
+                                <span className="text-xs font-bold text-white/90 tracking-wide">LIVE_MATCHES.DAT</span>
                                 <span
-                                    className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold text-white"
-                                    style={{ background: '#F97373' }}
+                                    className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold text-white"
+                                    style={{ background: '#FF6B9D' }}
                                 >
                                     <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
                                     {liveMatches.length} LIVE
                                 </span>
                             </div>
-                            <Link
-                                href="/live"
-                                className="text-sm font-semibold transition-colors"
-                                style={{ color: '#14B8A6' }}
-                            >
-                                View All →
-                            </Link>
+                            <div className="flex gap-1">
+                                <div className="w-3 h-3 rounded-sm bg-white/40"></div>
+                                <div className="w-3 h-3 rounded-sm bg-white/40"></div>
+                                <div className="w-3 h-3 rounded-sm bg-pink-300"></div>
+                            </div>
                         </div>
 
-                        {/* Matches Table */}
-                        <div className="rounded-2xl overflow-hidden bg-white shadow-lg border border-slate-100">
+                        {/* Table content */}
+                        <div style={{ background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(10px)' }}>
                             {/* Table Header */}
-                            <div className="grid grid-cols-12 gap-4 px-5 py-3 bg-slate-50 border-b border-slate-100 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                            <div
+                                className="grid grid-cols-12 gap-4 px-4 py-2 text-xs font-bold uppercase tracking-wider"
+                                style={{ background: '#F8E8F8', color: '#957DAD' }}
+                            >
                                 <div className="col-span-5">Match</div>
                                 <div className="col-span-3 text-center">Result (1 X 2)</div>
-                                <div className="col-span-2 text-center">Over/Under 2.5</div>
+                                <div className="col-span-2 text-center">O/U 2.5</div>
                                 <div className="col-span-2 text-center">Time</div>
                             </div>
 
@@ -322,33 +389,33 @@ export default function Home() {
                             {liveMatches.map((match, index) => (
                                 <div
                                     key={match.id}
-                                    className={`grid grid-cols-12 gap-4 px-5 py-4 items-center transition-colors hover:bg-slate-50 ${index !== liveMatches.length - 1 ? 'border-b border-slate-100' : ''
+                                    className={`grid grid-cols-12 gap-4 px-4 py-3 items-center transition-colors hover:bg-pink-50 ${index !== liveMatches.length - 1 ? 'border-b border-purple-100' : ''
                                         }`}
                                 >
                                     {/* Match Info */}
                                     <div className="col-span-5">
                                         <div
                                             className="text-[10px] font-bold uppercase tracking-wider mb-1"
-                                            style={{ color: '#F97373' }}
+                                            style={{ color: '#FF6B9D' }}
                                         >
                                             {match.league}
                                         </div>
                                         <div className="flex items-center gap-3">
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex items-center justify-between gap-2">
-                                                    <span className="font-semibold text-slate-700 truncate">{match.homeTeam}</span>
+                                                    <span className="font-semibold truncate" style={{ color: '#6B4C7A' }}>{match.homeTeam}</span>
                                                     <span
                                                         className="text-xl font-black"
-                                                        style={{ color: '#14B8A6' }}
+                                                        style={{ color: '#7EC8E3' }}
                                                     >
                                                         {match.homeScore}
                                                     </span>
                                                 </div>
-                                                <div className="flex items-center justify-between gap-2 mt-1">
-                                                    <span className="font-semibold text-slate-700 truncate">{match.awayTeam}</span>
+                                                <div className="flex items-center justify-between gap-2 mt-0.5">
+                                                    <span className="font-semibold truncate" style={{ color: '#6B4C7A' }}>{match.awayTeam}</span>
                                                     <span
                                                         className="text-xl font-black"
-                                                        style={{ color: '#F97373' }}
+                                                        style={{ color: '#FF6B9D' }}
                                                     >
                                                         {match.awayScore}
                                                     </span>
@@ -358,7 +425,7 @@ export default function Home() {
                                     </div>
 
                                     {/* 1X2 Odds */}
-                                    <div className="col-span-3 flex justify-center gap-2">
+                                    <div className="col-span-3 flex justify-center gap-1.5">
                                         {[
                                             { label: '1', value: match.odds.home },
                                             { label: 'X', value: match.odds.draw },
@@ -372,12 +439,16 @@ export default function Home() {
                                                         odd.label === '1' ? match.homeTeam : odd.label === '2' ? match.awayTeam : 'Draw',
                                                         odd.value
                                                     )}
-                                                    className="group relative px-3 py-2 rounded-xl bg-slate-50 border-2 border-slate-100 hover:border-teal-400 hover:bg-teal-50 transition-all min-w-[52px]"
+                                                    className="group px-2.5 py-1.5 rounded-lg transition-all hover:scale-105 min-w-[48px]"
+                                                    style={{
+                                                        background: '#F8E8F8',
+                                                        border: '2px solid #E0BBE4'
+                                                    }}
                                                 >
-                                                    <div className="text-[10px] text-slate-400 font-medium">{odd.label}</div>
+                                                    <div className="text-[9px] font-medium" style={{ color: '#957DAD' }}>{odd.label}</div>
                                                     <div
-                                                        className="text-sm font-bold group-hover:text-teal-600 transition-colors"
-                                                        style={{ color: '#0D9488' }}
+                                                        className="text-sm font-bold"
+                                                        style={{ color: '#C44569' }}
                                                     >
                                                         {odd.value.toFixed(2)}
                                                     </div>
@@ -386,46 +457,38 @@ export default function Home() {
                                     </div>
 
                                     {/* Over/Under */}
-                                    <div className="col-span-2 flex justify-center gap-2">
+                                    <div className="col-span-2 flex justify-center gap-1.5">
                                         <button
                                             onClick={() => addToBetSlip(`${match.homeTeam} vs ${match.awayTeam}`, 'Over 2.5', match.overUnder.over)}
-                                            className="group px-2 py-2 rounded-xl bg-slate-50 border-2 border-slate-100 hover:border-teal-400 hover:bg-teal-50 transition-all"
+                                            className="px-2 py-1.5 rounded-lg transition-all hover:scale-105"
+                                            style={{ background: '#E8F4F8', border: '2px solid #7EC8E3' }}
                                         >
-                                            <div className="text-[10px] text-slate-400">O</div>
-                                            <div
-                                                className="text-sm font-bold group-hover:text-teal-600"
-                                                style={{ color: '#14B8A6' }}
-                                            >
-                                                {match.overUnder.over.toFixed(2)}
-                                            </div>
+                                            <div className="text-[9px]" style={{ color: '#5BA4C9' }}>O</div>
+                                            <div className="text-sm font-bold" style={{ color: '#5BA4C9' }}>{match.overUnder.over.toFixed(2)}</div>
                                         </button>
                                         <button
                                             onClick={() => addToBetSlip(`${match.homeTeam} vs ${match.awayTeam}`, 'Under 2.5', match.overUnder.under)}
-                                            className="group px-2 py-2 rounded-xl bg-slate-50 border-2 border-slate-100 hover:border-coral-400 hover:bg-red-50 transition-all"
+                                            className="px-2 py-1.5 rounded-lg transition-all hover:scale-105"
+                                            style={{ background: '#FFE8EE', border: '2px solid #FF6B9D' }}
                                         >
-                                            <div className="text-[10px] text-slate-400">U</div>
-                                            <div
-                                                className="text-sm font-bold group-hover:text-red-500"
-                                                style={{ color: '#F97373' }}
-                                            >
-                                                {match.overUnder.under.toFixed(2)}
-                                            </div>
+                                            <div className="text-[9px]" style={{ color: '#C44569' }}>U</div>
+                                            <div className="text-sm font-bold" style={{ color: '#C44569' }}>{match.overUnder.under.toFixed(2)}</div>
                                         </button>
                                     </div>
 
                                     {/* Time */}
                                     <div className="col-span-2 text-center">
                                         <div
-                                            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full"
-                                            style={{ background: 'rgba(20, 184, 166, 0.1)' }}
+                                            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full"
+                                            style={{ background: '#E8F4F8' }}
                                         >
                                             <span
                                                 className="w-1.5 h-1.5 rounded-full animate-pulse"
-                                                style={{ background: '#14B8A6' }}
+                                                style={{ background: '#7EC8E3' }}
                                             />
                                             <span
-                                                className="text-sm font-bold"
-                                                style={{ color: '#0D9488' }}
+                                                className="text-xs font-bold"
+                                                style={{ color: '#5BA4C9' }}
                                             >
                                                 {match.time}
                                             </span>
@@ -436,22 +499,27 @@ export default function Home() {
                         </div>
                     </div>
 
-                    {/* Quick Stats */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {/* Stats Row */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                         {[
-                            { label: 'Total Volume', value: '$2.4M', change: '+12%', color: '#14B8A6', positive: true },
-                            { label: 'Active Bets', value: '8,432', change: '+5%', color: '#F97373', positive: true },
-                            { label: 'Avg Settlement', value: '0.8s', change: '-15%', color: '#6366F1', positive: true },
-                            { label: 'Oracle Updates', value: '1.2K/min', change: '', color: '#FB923C', positive: true },
+                            { label: 'Total Volume', value: '$2.4M', change: '+12%', color: '#7EC8E3' },
+                            { label: 'Active Bets', value: '8,432', change: '+5%', color: '#FF6B9D' },
+                            { label: 'Avg Settlement', value: '0.8s', change: '-15%', color: '#957DAD' },
+                            { label: 'Oracle Updates', value: '1.2K/min', change: '', color: '#C44569' },
                         ].map((stat) => (
                             <div
                                 key={stat.label}
-                                className="p-5 rounded-2xl bg-white shadow-sm border border-slate-100 hover:shadow-md transition-shadow"
+                                className="p-4 rounded-lg transition-all hover:scale-105"
+                                style={{
+                                    background: 'rgba(255,255,255,0.85)',
+                                    border: '2px solid #E0BBE4',
+                                    backdropFilter: 'blur(10px)'
+                                }}
                             >
-                                <div className="text-xs text-slate-400 font-medium mb-1">{stat.label}</div>
+                                <div className="text-xs font-medium mb-1" style={{ color: '#957DAD' }}>{stat.label}</div>
                                 <div className="text-2xl font-black" style={{ color: stat.color }}>{stat.value}</div>
                                 {stat.change && (
-                                    <div className={`text-xs font-semibold ${stat.positive ? 'text-teal-500' : 'text-red-400'}`}>
+                                    <div className="text-xs font-semibold" style={{ color: '#7EC8E3' }}>
                                         {stat.change} this week
                                     </div>
                                 )}
@@ -461,81 +529,98 @@ export default function Home() {
                 </main>
 
                 {/* Bet Slip Sidebar */}
-                <aside className="hidden xl:block w-80 border-l border-slate-200/60 bg-white/70 backdrop-blur-xl min-h-[calc(100vh-64px)]">
-                    <div className="p-4">
-                        <div className="flex items-center justify-between mb-4">
-                            <h3 className="font-bold text-slate-800">Bet Slip</h3>
+                <aside className="hidden xl:block w-72 ml-4 mt-4">
+                    <div
+                        className="rounded-lg overflow-hidden sticky top-4"
+                        style={{ border: '2px solid #FF6B9D' }}
+                    >
+                        {/* Window title bar */}
+                        <div
+                            className="flex items-center justify-between px-3 py-1.5"
+                            style={{ background: 'linear-gradient(180deg, #FF6B9D 0%, #C44569 100%)' }}
+                        >
+                            <span className="text-xs font-bold text-white/90 tracking-wide">BET_SLIP.EXE</span>
                             <span
-                                className="w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center text-white"
-                                style={{ background: '#F97373' }}
+                                className="w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center bg-white"
+                                style={{ color: '#C44569' }}
                             >
                                 {betSlip.length}
                             </span>
                         </div>
 
-                        {betSlip.length === 0 ? (
-                            <div className="text-center py-12">
-                                <div className="text-4xl mb-3 opacity-50">🎫</div>
-                                <div className="text-sm text-slate-400">Click odds to add bets</div>
-                            </div>
-                        ) : (
-                            <div className="space-y-3">
-                                {betSlip.map((bet, index) => (
-                                    <div
-                                        key={index}
-                                        className="p-3 rounded-xl bg-slate-50 border border-slate-100"
-                                    >
-                                        <div className="flex items-start justify-between gap-2">
-                                            <div className="flex-1 min-w-0">
-                                                <div className="text-xs text-slate-400 truncate">{bet.match}</div>
-                                                <div className="font-semibold text-slate-700">{bet.selection}</div>
-                                            </div>
-                                            <button
-                                                onClick={() => removeBet(index)}
-                                                className="text-slate-300 hover:text-red-400 transition-colors"
+                        <div style={{ background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(10px)' }}>
+                            <div className="p-3">
+                                {betSlip.length === 0 ? (
+                                    <div className="text-center py-8">
+                                        <div className="text-4xl mb-2 opacity-50">🎫</div>
+                                        <div className="text-sm" style={{ color: '#957DAD' }}>Click odds to add bets</div>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-2">
+                                        {betSlip.map((bet, index) => (
+                                            <div
+                                                key={index}
+                                                className="p-2.5 rounded-lg"
+                                                style={{ background: '#F8E8F8', border: '1px solid #E0BBE4' }}
                                             >
-                                                ✕
+                                                <div className="flex items-start justify-between gap-2">
+                                                    <div className="flex-1 min-w-0">
+                                                        <div className="text-[10px] truncate" style={{ color: '#957DAD' }}>{bet.match}</div>
+                                                        <div className="font-semibold text-sm" style={{ color: '#6B4C7A' }}>{bet.selection}</div>
+                                                    </div>
+                                                    <button
+                                                        onClick={() => removeBet(index)}
+                                                        className="text-purple-300 hover:text-pink-400 transition-colors text-sm"
+                                                    >
+                                                        ✕
+                                                    </button>
+                                                </div>
+                                                <div
+                                                    className="mt-1.5 text-lg font-bold"
+                                                    style={{ color: '#C44569' }}
+                                                >
+                                                    {bet.odds.toFixed(2)}
+                                                </div>
+                                            </div>
+                                        ))}
+
+                                        <div className="pt-2 border-t border-purple-100">
+                                            <div className="flex items-center justify-between text-sm mb-2">
+                                                <span style={{ color: '#957DAD' }}>Total Odds</span>
+                                                <span
+                                                    className="font-bold"
+                                                    style={{ color: '#C44569' }}
+                                                >
+                                                    {betSlip.reduce((acc, bet) => acc * bet.odds, 1).toFixed(2)}
+                                                </span>
+                                            </div>
+                                            <input
+                                                type="number"
+                                                placeholder="Stake (CRO)"
+                                                className="w-full px-3 py-2 rounded-lg text-sm outline-none"
+                                                style={{
+                                                    background: '#F8E8F8',
+                                                    border: '2px solid #E0BBE4',
+                                                    color: '#6B4C7A'
+                                                }}
+                                                defaultValue="0.01"
+                                                step="0.01"
+                                                min="0.01"
+                                            />
+                                            <button
+                                                className="w-full mt-2 py-3 rounded-lg font-bold text-white transition-all hover:scale-[1.02]"
+                                                style={{
+                                                    background: 'linear-gradient(135deg, #FF6B9D, #C44569)',
+                                                    boxShadow: '0 4px 15px rgba(196, 69, 105, 0.3)'
+                                                }}
+                                            >
+                                                Place Bet ⚡
                                             </button>
                                         </div>
-                                        <div
-                                            className="mt-2 text-lg font-bold"
-                                            style={{ color: '#14B8A6' }}
-                                        >
-                                            {bet.odds.toFixed(2)}
-                                        </div>
                                     </div>
-                                ))}
-
-                                <div className="pt-3 border-t border-slate-200">
-                                    <div className="flex items-center justify-between text-sm mb-3">
-                                        <span className="text-slate-400">Total Odds</span>
-                                        <span
-                                            className="font-bold"
-                                            style={{ color: '#F97373' }}
-                                        >
-                                            {betSlip.reduce((acc, bet) => acc * bet.odds, 1).toFixed(2)}
-                                        </span>
-                                    </div>
-                                    <input
-                                        type="number"
-                                        placeholder="Stake (CRO)"
-                                        className="w-full px-4 py-3 rounded-xl bg-slate-50 border-2 border-slate-100 focus:border-teal-400 outline-none text-slate-700 placeholder-slate-300 mb-3"
-                                        defaultValue="0.01"
-                                        step="0.01"
-                                        min="0.01"
-                                    />
-                                    <button
-                                        className="w-full py-4 rounded-xl font-bold text-lg text-white shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all"
-                                        style={{
-                                            background: 'linear-gradient(135deg, #14B8A6, #0D9488)',
-                                            boxShadow: '0 4px 20px rgba(20, 184, 166, 0.35)'
-                                        }}
-                                    >
-                                        Place Bet ⚡
-                                    </button>
-                                </div>
+                                )}
                             </div>
-                        )}
+                        </div>
                     </div>
                 </aside>
             </div>

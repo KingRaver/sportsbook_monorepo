@@ -4,46 +4,47 @@
 
 @layer base {
     :root {
-        /* Tropical Retro palette */
-        --background: 30 50% 98%;
-        --foreground: 215 25% 27%;
+        /* Pastel Dream Vaporwave palette */
+        --background: 330 50% 95%;
+        --foreground: 280 30% 30%;
 
         --card: 0 0% 100%;
-        --card-foreground: 215 25% 27%;
+        --card-foreground: 280 30% 30%;
 
         --popover: 0 0% 100%;
-        --popover-foreground: 215 25% 27%;
+        --popover-foreground: 280 30% 30%;
 
-        --primary: 168 76% 42%;
+        --primary: 340 75% 55%;
         --primary-foreground: 0 0% 100%;
 
-        --secondary: 0 91% 71%;
+        --secondary: 280 40% 65%;
         --secondary-foreground: 0 0% 100%;
 
-        --muted: 30 20% 93%;
-        --muted-foreground: 215 15% 47%;
+        --muted: 300 30% 90%;
+        --muted-foreground: 280 20% 50%;
 
-        --accent: 168 76% 42%;
-        --accent-foreground: 0 0% 100%;
+        --accent: 195 70% 70%;
+        --accent-foreground: 195 70% 30%;
 
         --destructive: 0 84% 60%;
         --destructive-foreground: 0 0% 100%;
 
-        --border: 30 15% 90%;
-        --input: 30 15% 90%;
-        --ring: 168 76% 42%;
+        --border: 300 30% 85%;
+        --input: 300 30% 85%;
+        --ring: 340 75% 55%;
 
         --radius: 0.75rem;
 
-        /* Tropical specific colors */
-        --teal: #14B8A6;
-        --teal-dark: #0D9488;
-        --coral: #F97373;
-        --coral-light: #FCA5A5;
-        --sand: #FEF9F3;
-        --sand-dark: #F5EBE0;
-        --sunset: #FB923C;
-        --ocean: #06B6D4;
+        /* Pastel specific colors */
+        --pink: #FFB6C1;
+        --pink-deep: #FF6B9D;
+        --pink-dark: #C44569;
+        --lavender: #E0BBE4;
+        --lavender-dark: #957DAD;
+        --purple: #6B4C7A;
+        --aqua: #7FE5F0;
+        --aqua-dark: #7EC8E3;
+        --cyan: #5BA4C9;
     }
 }
 
@@ -57,8 +58,12 @@
     }
 
     body {
-        @apply bg-[#FEF9F3] text-slate-800 antialiased;
+        @apply antialiased;
         font-family: var(--font-space-grotesk), system-ui, sans-serif;
+        background: linear-gradient(180deg, #FFB6C1 0%, #E0BBE4 25%, #957DAD 50%, #7EC8E3 75%, #7FE5F0 100%);
+        background-attachment: fixed;
+        min-height: 100vh;
+        color: #6B4C7A;
     }
 
     h1,
@@ -70,71 +75,88 @@
         font-family: var(--font-orbitron), var(--font-space-grotesk), system-ui, sans-serif;
     }
 
-    /* Custom scrollbar - light theme */
+    /* Custom scrollbar - pastel theme */
     ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
+        width: 10px;
+        height: 10px;
     }
 
     ::-webkit-scrollbar-track {
-        background: rgba(0, 0, 0, 0.02);
+        background: rgba(224, 187, 228, 0.3);
     }
 
     ::-webkit-scrollbar-thumb {
-        background: linear-gradient(180deg, #14B8A6, #0D9488);
-        border-radius: 4px;
+        background: linear-gradient(180deg, #FF6B9D, #C44569);
+        border-radius: 5px;
+        border: 2px solid rgba(224, 187, 228, 0.3);
     }
 
     ::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(180deg, #0D9488, #0F766E);
+        background: linear-gradient(180deg, #C44569, #9B2C50);
     }
 
     /* Selection styling */
     ::selection {
-        background: rgba(20, 184, 166, 0.2);
-        color: #0D9488;
+        background: rgba(255, 107, 157, 0.3);
+        color: #6B4C7A;
     }
 }
 
 @layer utilities {
 
     /* Soft glow effects */
-    .glow-teal {
-        box-shadow: 0 4px 20px rgba(20, 184, 166, 0.25),
-            0 8px 40px rgba(20, 184, 166, 0.15);
+    .glow-pink {
+        box-shadow: 0 4px 20px rgba(255, 107, 157, 0.3),
+            0 8px 40px rgba(255, 107, 157, 0.2);
     }
 
-    .glow-coral {
-        box-shadow: 0 4px 20px rgba(249, 115, 115, 0.25),
-            0 8px 40px rgba(249, 115, 115, 0.15);
+    .glow-lavender {
+        box-shadow: 0 4px 20px rgba(149, 125, 173, 0.3),
+            0 8px 40px rgba(149, 125, 173, 0.2);
     }
 
-    .glow-sunset {
-        box-shadow: 0 4px 20px rgba(251, 146, 60, 0.25),
-            0 8px 40px rgba(251, 146, 60, 0.15);
-    }
-
-    /* Text colors */
-    .text-teal {
-        color: #14B8A6;
-    }
-
-    .text-coral {
-        color: #F97373;
+    .glow-aqua {
+        box-shadow: 0 4px 20px rgba(126, 200, 227, 0.3),
+            0 8px 40px rgba(126, 200, 227, 0.2);
     }
 
     /* Gradient text */
-    .gradient-text-tropical {
-        @apply bg-gradient-to-r from-[#14B8A6] via-[#06B6D4] to-[#0D9488] bg-clip-text text-transparent;
+    .gradient-text-pastel {
+        @apply bg-gradient-to-r from-[#FF6B9D] via-[#957DAD] to-[#7EC8E3] bg-clip-text text-transparent;
     }
 
-    /* Background utilities */
-    .bg-sand {
-        background: #FEF9F3;
+    /* Window style card */
+    .window-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        border: 2px solid #E0BBE4;
+        border-radius: 8px;
+        overflow: hidden;
     }
 
-    .bg-sand-dark {
-        background: #F5EBE0;
+    .window-titlebar {
+        background: linear-gradient(180deg, #E0BBE4 0%, #C9A0DC 100%);
+        padding: 6px 12px;
+        font-size: 11px;
+        font-weight: bold;
+        color: rgba(255, 255, 255, 0.9);
+        letter-spacing: 0.5px;
+    }
+
+    .window-titlebar-pink {
+        background: linear-gradient(180deg, #FF6B9D 0%, #C44569 100%);
+    }
+
+    .window-titlebar-aqua {
+        background: linear-gradient(180deg, #7EC8E3 0%, #5BA4C9 100%);
+    }
+
+    /* Grid background */
+    .grid-bg {
+        background-image:
+            linear-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.3) 1px, transparent 1px);
+        background-size: 40px 40px;
     }
 
     /* Floating animation */
@@ -154,90 +176,85 @@
         }
     }
 
-    /* Subtle pulse */
-    .pulse-soft {
-        animation: pulseSoft 2s ease-in-out infinite;
+    /* Sparkle animation */
+    .sparkle {
+        animation: sparkle 2s ease-in-out infinite;
     }
 
-    @keyframes pulseSoft {
+    @keyframes sparkle {
 
         0%,
         100% {
-            box-shadow: 0 2px 10px rgba(20, 184, 166, 0.2);
+            opacity: 0.4;
+            transform: scale(1);
         }
 
         50% {
-            box-shadow: 0 4px 20px rgba(20, 184, 166, 0.35);
+            opacity: 1;
+            transform: scale(1.2);
         }
     }
 
-    /* Glass morphism - light version */
-    .glass {
-        @apply bg-white/70 backdrop-blur-xl border border-slate-200/60;
-    }
-
-    .glass-teal {
-        @apply bg-teal-50/70 backdrop-blur-xl border border-teal-200/60;
-    }
-
-    /* Card styles */
-    .card-elevated {
-        @apply bg-white rounded-2xl shadow-lg border border-slate-100;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05),
-            0 8px 40px rgba(0, 0, 0, 0.03);
-    }
-
     /* Button variants */
-    .btn-teal {
-        @apply font-bold text-white rounded-xl transition-all;
-        background: linear-gradient(135deg, #14B8A6, #0D9488);
-        box-shadow: 0 4px 14px rgba(20, 184, 166, 0.35);
+    .btn-pink {
+        @apply font-bold text-white rounded-full transition-all;
+        background: linear-gradient(135deg, #FF6B9D, #C44569);
+        box-shadow: 0 4px 15px rgba(196, 69, 105, 0.3);
     }
 
-    .btn-teal:hover {
-        box-shadow: 0 6px 20px rgba(20, 184, 166, 0.45);
-        transform: scale(1.02);
+    .btn-pink:hover {
+        box-shadow: 0 6px 20px rgba(196, 69, 105, 0.4);
+        transform: scale(1.05);
     }
 
-    .btn-coral {
-        @apply font-bold text-white rounded-xl transition-all;
-        background: linear-gradient(135deg, #F97373, #F87171);
-        box-shadow: 0 4px 14px rgba(249, 115, 115, 0.35);
+    .btn-aqua {
+        @apply font-bold text-white rounded-full transition-all;
+        background: linear-gradient(135deg, #7EC8E3, #5BA4C9);
+        box-shadow: 0 4px 15px rgba(126, 200, 227, 0.3);
     }
 
-    .btn-coral:hover {
-        box-shadow: 0 6px 20px rgba(249, 115, 115, 0.45);
-        transform: scale(1.02);
+    .btn-aqua:hover {
+        box-shadow: 0 6px 20px rgba(126, 200, 227, 0.4);
+        transform: scale(1.05);
+    }
+
+    .btn-outline-lavender {
+        @apply font-semibold rounded-full transition-all;
+        background: white;
+        color: #957DAD;
+        border: 2px solid #E0BBE4;
+    }
+
+    .btn-outline-lavender:hover {
+        background: #F8E8F8;
     }
 
     /* Odds button styles */
     .odds-btn {
-        @apply px-3 py-2 rounded-xl bg-slate-50 border-2 border-slate-100 transition-all;
+        @apply px-3 py-2 rounded-lg transition-all;
+        background: #F8E8F8;
+        border: 2px solid #E0BBE4;
     }
 
     .odds-btn:hover {
-        @apply border-teal-400 bg-teal-50;
-    }
-
-    /* Match row hover */
-    .match-row {
-        @apply transition-colors;
-    }
-
-    .match-row:hover {
-        @apply bg-slate-50;
+        transform: scale(1.05);
+        border-color: #C9A0DC;
     }
 
     /* Input focus states */
     input:focus,
     textarea:focus,
     select:focus {
-        @apply outline-none ring-2 ring-teal-400/50 border-teal-400;
+        @apply outline-none;
+        border-color: #FF6B9D !important;
+        box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.2);
     }
 
     /* Loading spinner */
     .spinner {
-        @apply w-5 h-5 border-2 border-slate-200 border-t-teal-500 rounded-full;
+        @apply w-5 h-5 border-2 rounded-full;
+        border-color: #E0BBE4;
+        border-top-color: #FF6B9D;
         animation: spin 0.8s linear infinite;
     }
 
@@ -247,26 +264,21 @@
         }
     }
 
-    /* Wave decoration */
-    .wave-bottom {
-        position: relative;
+    /* Glass card */
+    .glass-pastel {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        border: 2px solid #E0BBE4;
     }
 
-    .wave-bottom::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 100px;
-        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%2314B8A6' fill-opacity='0.1' d='M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E") no-repeat bottom;
-        background-size: cover;
-        pointer-events: none;
+    /* Retro window buttons */
+    .window-btn {
+        @apply w-3 h-3 rounded-sm;
+        background: rgba(255, 255, 255, 0.4);
     }
 
-    /* Tropical decorative pattern */
-    .pattern-tropical {
-        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2314B8A6' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    .window-btn-close {
+        background: #FFB6C1;
     }
 }
 
@@ -296,5 +308,11 @@ input {
 
 /* Focus visible for accessibility */
 :focus-visible {
-    @apply outline-2 outline-offset-2 outline-teal-500;
+    @apply outline-2 outline-offset-2;
+    outline-color: #FF6B9D;
+}
+
+/* Custom placeholder color */
+::placeholder {
+    color: #C9A0DC;
 }
