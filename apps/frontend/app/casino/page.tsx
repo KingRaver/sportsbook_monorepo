@@ -1,90 +1,116 @@
 "use client"
 
+import type { Route } from 'next'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
-import { useAccount } from 'wagmi'
+import { useEffect, useState } from 'react'
 
-// Mock data - replace with TanStack Query later
+// Casino games data
 const casinoGames = [
-    {
-        icon: '🎰',
-        name: 'Slots',
-        count: 245
-    },
-    {
-        icon: '🃏',
-        name: 'Blackjack',
-        count: 89
-    },
-    {
-        icon: '♠️',
-        name: 'Poker',
-        count: 67
-    },
-    {
-        icon: '🎲',
-        name: 'Roulette',
-        count: 54
-    },
-    {
-        icon: '🦊',
-        name: 'Crash',
-        count: 112
-    },
+    { icon: '🎰', name: 'Slots', count: 245 },
+    { icon: '🃏', name: 'Blackjack', count: 89 },
+    { icon: '♠️', name: 'Poker', count: 67 },
+    { icon: '🎲', name: 'Roulette', count: 54 },
+    { icon: '🚀', name: 'Crash', count: 112 },
+    { icon: '🎯', name: 'Dice', count: 38 },
 ]
 
-const casinoTables = [
+const liveTables = [
     {
         id: 1,
         game: 'Lightning Roulette',
         table: 'Table 7',
         dealer: 'Elena K.',
-        status: 'LIVE',
-        bets: '$24.7K',
-        odds: { player: 1.95, banker: 1.98, tie: 8.50 },
-        multiplier: { crash: 2.15 }
+        players: 847,
+        minBet: '$0.50',
+        status: 'SPINNING',
+        odds: { red: 1.95, black: 1.95, green: 35.0 },
+        lastNumbers: [7, 32, 15, 19, 4]
     },
     {
         id: 2,
         game: 'Infinite Blackjack',
         table: 'Table 3',
         dealer: 'Mike R.',
-        status: 'LIVE',
-        bets: '$18.2K',
-        odds: { player: 1.92, dealer: 1.05, tie: 9.00 },
-        multiplier: { crash: null }
+        players: 1243,
+        minBet: '$1.00',
+        status: 'DEALING',
+        odds: { hit: 1.92, stand: 1.05, double: 2.0 },
+        lastNumbers: []
     },
     {
         id: 3,
         game: 'Speed Baccarat',
         table: 'Table 12',
         dealer: 'Sophia L.',
-        status: 'LIVE',
-        bets: '$31.5K',
-        odds: { player: 1.98, banker: 0.95, tie: 8.00 },
-        multiplier: { crash: null }
+        players: 562,
+        minBet: '$5.00',
+        status: 'BETTING',
+        odds: { player: 1.98, banker: 0.95, tie: 8.0 },
+        lastNumbers: []
     },
     {
         id: 4,
         game: 'Rocket Crash',
-        table: 'Crash-01',
+        table: 'Crash Arena',
         dealer: 'Auto',
-        status: 'CRASHING',
-        bets: '$42.8K',
-        odds: { player: null, banker: null, tie: null },
-        multiplier: { crash: 4.72 }
+        players: 2891,
+        minBet: '$0.10',
+        status: 'FLYING',
+        odds: { cashout: null, banker: null, tie: null },
+        multiplier: 3.47
+    },
+    {
+        id: 5,
+        game: 'Dream Catcher',
+        table: 'Wheel 1',
+        dealer: 'Luna M.',
+        players: 423,
+        minBet: '$0.25',
+        status: 'SPINNING',
+        odds: { x1: 1.0, x2: 2.0, x5: 5.0 },
+        lastNumbers: [2, 1, 5, 2, 1]
     }
+]
+
+const navItems: { name: string; path: Route }[] = [
+    { name: 'Live', path: '/' as Route },
+    { name: 'Sports', path: '/sports' as Route },
+    { name: 'Esports', path: '/esports' as Route },
+    { name: 'Casino', path: '/casino' as Route }
 ]
 
 export default function CasinoPage() {
     const pathname = usePathname()
     const [selectedGame, setSelectedGame] = useState('Slots')
-    const [betSlip, setBetSlip] = useState<{ match: string, selection: string, odds: number }[]>([])
-    const { isConnected } = useAccount()
+    const [betSlip, setBetSlip] = useState<{ table: string; selection: string; odds: number }[]>([])
+    const [currentTime, setCurrentTime] = useState('')
+    const [crashMultiplier, setCrashMultiplier] = useState(1.00)
 
-    const addToBetSlip = (match: string, selection: string, odds: number) => {
-        setBetSlip(prev => [...prev, { match, selection, odds }])
+    useEffect(() => {
+        const timer = setInterval(() => {
+            const now = new Date()
+            setCurrentTime(now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            }))
+        }, 1000)
+        return () => clearInterval(timer)
+    }, [])
+
+    useEffect(() => {
+        const crashTimer = setInterval(() => {
+            setCrashMultiplier(prev => {
+                if (prev >= 10) return 1.00
+                return prev + 0.03
+            })
+        }, 100)
+        return () => clearInterval(crashTimer)
+    }, [])
+
+    const addToBetSlip = (table: string, selection: string, odds: number) => {
+        setBetSlip(prev => [...prev, { table, selection, odds }])
     }
 
     const removeBet = (index: number) => {
@@ -93,129 +119,270 @@ export default function CasinoPage() {
 
     return (
         <div className="min-h-screen overflow-hidden relative">
-            {/* Dreamy gradient background */}
+            {/* Dreamy Vaporwave Background */}
             <div className="fixed inset-0">
-                {/* Vegas gold gradient */}
+                {/* Main gradient - soft pastels like the reference */}
                 <div
                     className="absolute inset-0"
                     style={{
-                        background: 'linear-gradient(180deg, #1A0D2E 0%, #3D0F2A 25%, #8B1E4A 50%, #D62839 75%, #FF4757 100%)'
+                        background: 'linear-gradient(180deg, #FFB6C1 0%, #DDA0DD 15%, #E6E6FA 30%, #B0E0E6 50%, #98D8C8 70%, #F0E68C 85%, #FFB6C1 100%)'
                     }}
                 />
-                {/* Casino grid overlay */}
+
+                {/* Secondary overlay for depth */}
                 <div
-                    className="absolute inset-0 opacity-25"
+                    className="absolute inset-0 opacity-50"
                     style={{
-                        backgroundImage: 'linear-gradient(rgba(255,215,0,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,215,0,0.1) 1px, transparent 1px)',
-                        backgroundSize: '60px 60px'
+                        background: 'radial-gradient(ellipse at 30% 20%, rgba(255, 182, 193, 0.4) 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, rgba(176, 224, 230, 0.4) 0%, transparent 50%)'
                     }}
                 />
-                {/* Vegas lights */}
-                <div className="absolute top-20 left-10 text-4xl opacity-50 animate-pulse">✨</div>
-                <div className="absolute top-40 right-15 text-3xl opacity-40 animate-pulse" style={{ animationDelay: '1s' }}>💎</div>
-                <div className="absolute top-60 left-25 text-2xl opacity-60 animate-pulse" style={{ animationDelay: '0.5s' }}>⭐</div>
-                <div className="absolute bottom-40 right-25 text-3xl opacity-50 animate-pulse" style={{ animationDelay: '1.5s' }}>🎰</div>
-                <div className="absolute bottom-60 left-15 text-4xl opacity-40 animate-pulse" style={{ animationDelay: '2s' }}>✨</div>
+
+                {/* Retro grid overlay */}
+                <div
+                    className="absolute inset-0 opacity-30"
+                    style={{
+                        backgroundImage: `
+                            linear-gradient(rgba(255,255,255,0.4) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(255,255,255,0.4) 1px, transparent 1px)
+                        `,
+                        backgroundSize: '40px 40px'
+                    }}
+                />
+
+                {/* Floating clouds */}
+                <div className="absolute top-16 left-[8%] text-5xl opacity-70 animate-bounce" style={{ animationDuration: '6s' }}>☁️</div>
+                <div className="absolute top-32 right-[12%] text-4xl opacity-60 animate-bounce" style={{ animationDuration: '8s', animationDelay: '1s' }}>☁️</div>
+                <div className="absolute top-48 left-[25%] text-3xl opacity-50 animate-bounce" style={{ animationDuration: '7s', animationDelay: '2s' }}>☁️</div>
+
+                {/* Sparkles */}
+                <div className="absolute top-24 right-[30%] text-2xl opacity-60 animate-pulse">✦</div>
+                <div className="absolute top-40 left-[15%] text-xl opacity-50 animate-pulse" style={{ animationDelay: '0.5s' }}>✧</div>
+                <div className="absolute bottom-32 right-[20%] text-2xl opacity-60 animate-pulse" style={{ animationDelay: '1s' }}>✦</div>
+                <div className="absolute bottom-48 left-[35%] text-xl opacity-50 animate-pulse" style={{ animationDelay: '1.5s' }}>✧</div>
+                <div className="absolute top-[60%] right-[8%] text-lg opacity-40 animate-pulse" style={{ animationDelay: '2s' }}>⭐</div>
+
+                {/* Casino-themed floating elements */}
+                <div className="absolute bottom-24 right-[15%] text-3xl opacity-40 animate-bounce" style={{ animationDuration: '5s' }}>🎰</div>
+                <div className="absolute top-[45%] left-[5%] text-2xl opacity-30 animate-bounce" style={{ animationDuration: '6s', animationDelay: '1s' }}>🃏</div>
+                <div className="absolute bottom-[40%] right-[5%] text-2xl opacity-35 animate-bounce" style={{ animationDuration: '7s', animationDelay: '2s' }}>💎</div>
             </div>
 
-            {/* Header - Casino window style */}
-            <header className="relative z-10 mx-4 mt-4">
-                <div className="rounded-t-lg overflow-hidden" style={{ background: 'linear-gradient(180deg, #8B1E4A 0%, #5F0F30 100%)', border: '2px solid #D62839' }}>
-                    {/* Window title bar */}
-                    <div className="flex items-center justify-between px-3 py-1.5" style={{ background: 'linear-gradient(180deg, #D62839 0%, #A61E3A 100%)' }}>
-                        <span className="text-xs font-bold text-white/90 tracking-wide">CASINO.EXE</span>
-                        <div className="flex gap-1">
-                            <div className="w-3 h-3 rounded-sm bg-white/40"></div>
-                            <div className="w-3 h-3 rounded-sm bg-white/40"></div>
-                            <div className="w-3 h-3 rounded-sm bg-red-300"></div>
+            {/* Main Desktop Window */}
+            <div className="relative z-10 mx-4 mt-4">
+                {/* Window Frame */}
+                <div
+                    className="rounded-xl overflow-hidden"
+                    style={{
+                        background: 'linear-gradient(180deg, #E6E6FA 0%, #DDA0DD 100%)',
+                        border: '3px solid #D8BFD8',
+                        boxShadow: '0 8px 32px rgba(0,0,0,0.1), inset 0 2px 0 rgba(255,255,255,0.5)'
+                    }}
+                >
+                    {/* Window Title Bar */}
+                    <div
+                        className="flex items-center justify-between px-4 py-2"
+                        style={{
+                            background: 'linear-gradient(180deg, #DDA0DD 0%, #BA55D3 100%)',
+                            borderBottom: '2px solid #9932CC'
+                        }}
+                    >
+                        <div className="flex items-center gap-3">
+                            <span className="text-sm font-black text-white tracking-widest drop-shadow-md">
+                                CASINO_ROYALE.EXE
+                            </span>
+                            <div
+                                className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold"
+                                style={{
+                                    background: 'linear-gradient(135deg, #98D8C8, #20B2AA)',
+                                    color: 'white',
+                                    boxShadow: '0 2px 8px rgba(32, 178, 170, 0.4)'
+                                }}
+                            >
+                                <span className="w-2 h-2 bg-white rounded-full animate-ping" />
+                                JACKPOT ACTIVE
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <span className="text-xs font-mono text-white/80">{currentTime}</span>
+                            <div className="flex gap-1.5">
+                                <button className="w-4 h-4 rounded-sm bg-yellow-300 hover:bg-yellow-400 transition-colors flex items-center justify-center text-[10px] font-bold text-yellow-800">−</button>
+                                <button className="w-4 h-4 rounded-sm bg-green-300 hover:bg-green-400 transition-colors flex items-center justify-center text-[10px] font-bold text-green-800">□</button>
+                                <button className="w-4 h-4 rounded-sm bg-pink-300 hover:bg-pink-400 transition-colors flex items-center justify-center text-[10px] font-bold text-pink-800">×</button>
+                            </div>
                         </div>
                     </div>
 
-                    {/* Main header content */}
-                    <div className="flex items-center justify-between px-4 py-3 bg-white/10 backdrop-blur-sm border-b border-red-500/30">
-                        <div className="flex items-center gap-2">
-                            <Link href="/" className="flex items-center gap-2 group">
-                                <div className="w-9 h-9 rounded-lg flex items-center justify-center text-lg font-black text-white"
+                    {/* Menu Bar */}
+                    <div
+                        className="flex items-center gap-6 px-4 py-1.5 text-xs font-medium"
+                        style={{
+                            background: 'rgba(255,255,255,0.7)',
+                            borderBottom: '1px solid rgba(186, 85, 211, 0.2)',
+                            color: '#6B4C7A'
+                        }}
+                    >
+                        <span className="hover:text-purple-600 cursor-pointer">File</span>
+                        <span className="hover:text-purple-600 cursor-pointer">Edit</span>
+                        <span className="hover:text-purple-600 cursor-pointer">View</span>
+                        <span className="hover:text-purple-600 cursor-pointer">Games</span>
+                        <span className="hover:text-purple-600 cursor-pointer">Wallet</span>
+                        <span className="hover:text-purple-600 cursor-pointer">Help</span>
+                    </div>
+
+                    {/* Main Header Content */}
+                    <div
+                        className="flex items-center justify-between px-4 py-3"
+                        style={{
+                            background: 'rgba(255,255,255,0.85)',
+                            backdropFilter: 'blur(10px)'
+                        }}
+                    >
+                        <div className="flex items-center gap-8">
+                            {/* Logo */}
+                            <Link href={'/' as Route} className="flex items-center gap-3 group">
+                                <div
+                                    className="w-11 h-11 rounded-xl flex items-center justify-center text-xl font-black text-white transition-all group-hover:scale-110 group-hover:rotate-3"
                                     style={{
-                                        background: 'linear-gradient(135deg, #FF4757, #D62839)',
-                                        boxShadow: '0 2px 10px rgba(214, 40, 57, 0.4)'
-                                    }}>
-                                    C
+                                        background: 'linear-gradient(135deg, #FF69B4 0%, #DA70D6 50%, #BA55D3 100%)',
+                                        boxShadow: '0 4px 15px rgba(255, 105, 180, 0.4), inset 0 2px 0 rgba(255,255,255,0.3)'
+                                    }}
+                                >
+                                    μ
                                 </div>
-                                <span className="text-lg font-black tracking-tight">
-                                    <span style={{ color: '#FF4757' }}>CASINO</span>
-                                    <span style={{ color: '#D62839' }}> ROYALE</span>
-                                </span>
+                                <div className="flex flex-col">
+                                    <span className="text-xl font-black tracking-tight leading-none">
+                                        <span style={{ color: '#FF69B4' }}>MICRO</span>
+                                        <span style={{ color: '#BA55D3' }}>BETS</span>
+                                    </span>
+                                    <span className="text-[10px] font-bold tracking-widest" style={{ color: '#98D8C8' }}>
+                                        ✨ CASINO ROYALE ✨
+                                    </span>
+                                </div>
                             </Link>
+
+                            {/* Navigation */}
+                            <nav className="hidden md:flex items-center gap-1">
+                                {navItems.map((item) => {
+                                    const isCasino = item.name === 'Casino'
+
+                                    return (
+                                        <Link
+                                            key={item.name}
+                                            href={item.path}
+                                            className={`
+                                                px-4 py-2 rounded-full text-sm font-bold transition-all duration-300
+                                                ${isCasino
+                                                    ? 'text-white scale-105'
+                                                    : 'hover:scale-105'
+                                                }
+                                            `}
+                                            style={isCasino ? {
+                                                background: 'linear-gradient(135deg, #FF69B4 0%, #DA70D6 50%, #BA55D3 100%)',
+                                                boxShadow: '0 4px 15px rgba(255, 105, 180, 0.4)'
+                                            } : {
+                                                color: '#9370DB',
+                                                background: 'transparent'
+                                            }}
+                                        >
+                                            {isCasino && (
+                                                <span className="inline-block w-2 h-2 bg-white rounded-full mr-2 animate-pulse" />
+                                            )}
+                                            {item.name}
+                                        </Link>
+                                    )
+                                })}
+                            </nav>
                         </div>
 
-                        {/* Navigation - Casino active */}
-                        <nav className="hidden md:flex items-center gap-1">
-                            {[
-                                { name: 'Live', href: '/live' },
-                                { name: 'Sports', href: '/sports' },
-                                { name: 'Esports', href: '/esports' },
-                                { name: 'Casino', href: '/casino' }
-                            ].map(({ name, href }, i) => (
-                                <Link
-                                    key={name}
-                                    ref={href}
-                                    className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${pathname === href
-                                        ? 'text-purple-300 hover:text-purple-400 hover:bg-purple-900/50'
-                                        : 'text-slate-300 hover:text-purple-400 hover:bg-purple-900/30'} ${i === 2 ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg shadow-purple-500/30 mr-1.5' : ''}`}
-                                    style={i === 2 && pathname === href
-                                        ? { background: 'linear-gradient(135deg, #C77DFF, #9D4EDD)', boxShadow: '0 2px 8px rgba(199, 127, 255, 0.3)' }
-                                        : {}} href={'/'}                >
-                                    {i === 2 && pathname === href && <span className="inline-block w-1.5 h-1.5 bg-white rounded-full mr-1.5 animate-pulse" />}
-                                    {name}
-                                </Link>
-                            ))}
-                        </nav>
-
-                        <div className="flex items-center gap-2">
-                            <button className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all hover:scale-105"
-                                style={{ background: 'rgba(255,255,255,0.1)', color: '#D1D5DB', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.2)' }}>
+                        {/* Right side */}
+                        <div className="flex items-center gap-3">
+                            <button
+                                className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all hover:scale-105"
+                                style={{
+                                    background: 'linear-gradient(135deg, rgba(255,182,193,0.5), rgba(221,160,221,0.5))',
+                                    border: '2px solid rgba(186, 85, 211, 0.3)',
+                                    color: '#6B4C7A'
+                                }}
+                            >
                                 <span>🔍</span>
                                 <span>Search</span>
                             </button>
-                            <button className="px-4 py-2 rounded-full text-sm font-bold text-white transition-all hover:scale-105"
+                            <button
+                                className="px-5 py-2.5 rounded-full text-sm font-black text-white transition-all hover:scale-105"
                                 style={{
-                                    background: 'linear-gradient(135deg, #FFD700, #FFA500)',
-                                    boxShadow: '0 2px 10px rgba(255, 215, 0, 0.4)'
-                                }}>
-                                Connect Wallet
+                                    background: 'linear-gradient(135deg, #20B2AA 0%, #3CB371 100%)',
+                                    boxShadow: '0 4px 15px rgba(32, 178, 170, 0.4)'
+                                }}
+                            >
+                                💰 Connect Wallet
                             </button>
                         </div>
                     </div>
                 </div>
-            </header>
+            </div>
 
             <div className="relative z-10 flex px-4 pb-4">
-                {/* Casino Sidebar */}
-                <aside className="hidden lg:block w-20 mr-4 mt-4">
-                    <div className="rounded-lg overflow-hidden"
+                {/* Games Sidebar */}
+                <aside className="hidden lg:block w-24 mr-4 mt-4">
+                    <div
+                        className="rounded-xl overflow-hidden"
                         style={{
-                            background: 'rgba(255,255,255,0.1)',
-                            border: '2px solid #D62839',
+                            background: 'rgba(255,255,255,0.85)',
+                            border: '3px solid #D8BFD8',
+                            boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
                             backdropFilter: 'blur(10px)'
-                        }}>
-                        <div className="px-2 py-1 text-[10px] font-bold text-center text-white"
-                            style={{ background: 'linear-gradient(180deg, #D62839 0%, #A61E3A 100%)' }}>
-                            CASINO
+                        }}
+                    >
+                        {/* Sidebar title */}
+                        <div
+                            className="px-2 py-2 text-[10px] font-black text-center tracking-widest text-white"
+                            style={{
+                                background: 'linear-gradient(180deg, #DDA0DD, #BA55D3)'
+                            }}
+                        >
+                            🎰 GAMES
                         </div>
-                        <div className="flex flex-col items-center py-2 gap-1">
+                        <div className="flex flex-col items-center py-3 gap-2">
                             {casinoGames.map(game => (
                                 <button
                                     key={game.name}
                                     onClick={() => setSelectedGame(game.name)}
-                                    className={`group relative w-12 h-12 rounded-lg flex flex-col items-center justify-center transition-all ${selectedGame === game.name ? 'bg-gradient-to-br from-red-500/30 to-orange-500/30 hover:bg-orange-500/20' : 'hover:bg-red-500/20'
-                                        }`}
+                                    className={`
+                                        group relative w-16 h-16 rounded-xl flex flex-col items-center justify-center transition-all duration-300
+                                        ${selectedGame === game.name
+                                            ? 'scale-110'
+                                            : 'hover:scale-105'
+                                        }
+                                    `}
+                                    style={selectedGame === game.name ? {
+                                        background: 'linear-gradient(135deg, rgba(255, 105, 180, 0.3), rgba(186, 85, 211, 0.3))',
+                                        border: '2px solid #FF69B4',
+                                        boxShadow: '0 4px 15px rgba(255, 105, 180, 0.3)'
+                                    } : {
+                                        background: 'rgba(255,255,255,0.5)',
+                                        border: '2px solid transparent'
+                                    }}
                                 >
-                                    <span className="text-xl">{game.icon}</span>
-                                    <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-[9px] font-bold flex items-center justify-center text-white bg-gradient-to-r from-red-500 to-orange-500">
+                                    <span className="text-2xl">{game.icon}</span>
+                                    <span
+                                        className="absolute -top-1 -right-1 w-5 h-5 rounded-full text-[9px] font-bold flex items-center justify-center text-white"
+                                        style={{
+                                            background: 'linear-gradient(135deg, #FF69B4, #BA55D3)',
+                                            boxShadow: '0 2px 8px rgba(255, 105, 180, 0.4)'
+                                        }}
+                                    >
                                         {game.count > 99 ? '99+' : game.count}
                                     </span>
-                                    <div className="absolute left-full ml-2 px-2 py-1 rounded text-[10px] font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50 text-white bg-red-600 shadow-lg">
+
+                                    {/* Tooltip */}
+                                    <div
+                                        className="absolute left-full ml-3 px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 z-50"
+                                        style={{
+                                            background: 'linear-gradient(135deg, #FF69B4, #BA55D3)',
+                                            color: 'white',
+                                            boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
+                                        }}
+                                    >
                                         {game.name}
                                     </div>
                                 </button>
@@ -227,90 +394,218 @@ export default function CasinoPage() {
                 {/* Main Content */}
                 <main className="flex-1 mt-4 space-y-4">
                     {/* Live Tables Window */}
-                    <div className="rounded-lg overflow-hidden" style={{ border: '2px solid #D62839' }}>
+                    <div
+                        className="rounded-xl overflow-hidden"
+                        style={{
+                            border: '3px solid #D8BFD8',
+                            boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
+                        }}
+                    >
                         {/* Window title bar */}
-                        <div className="flex items-center justify-between px-3 py-1.5" style={{ background: 'linear-gradient(180deg, #D62839 0%, #A61E3A 100%)' }}>
-                            <div className="flex items-center gap-2">
-                                <span className="text-xs font-bold text-white/90 tracking-wide">LIVETABLES.DAT</span>
-                                <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold text-white bg-gradient-to-r from-red-500 to-orange-500">
-                                    <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
-                                    <span>{casinoTables.length}</span> LIVE
+                        <div
+                            className="flex items-center justify-between px-4 py-2"
+                            style={{
+                                background: 'linear-gradient(90deg, #DDA0DD 0%, #FF69B4 50%, #98D8C8 100%)'
+                            }}
+                        >
+                            <div className="flex items-center gap-3">
+                                <span className="text-xs font-black text-white tracking-widest drop-shadow-md">
+                                    LIVE_TABLES.DAT
+                                </span>
+                                <span
+                                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold text-white"
+                                    style={{
+                                        background: 'linear-gradient(135deg, #20B2AA, #3CB371)',
+                                        boxShadow: '0 2px 8px rgba(32, 178, 170, 0.4)'
+                                    }}
+                                >
+                                    <span className="w-1.5 h-1.5 bg-white rounded-full animate-ping" />
+                                    {liveTables.length} TABLES
                                 </span>
                             </div>
-                            <div className="flex gap-1">
-                                <div className="w-3 h-3 rounded-sm bg-white/40"></div>
-                                <div className="w-3 h-3 rounded-sm bg-white/40"></div>
-                                <div className="w-3 h-3 rounded-sm bg-red-300"></div>
+                            <div className="flex gap-1.5">
+                                <div className="w-3 h-3 rounded-full bg-white/40" />
+                                <div className="w-3 h-3 rounded-full bg-white/40" />
+                                <div className="w-3 h-3 rounded-full bg-pink-200" />
                             </div>
                         </div>
 
                         {/* Tables content */}
-                        <div style={{ background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)' }}>
-                            <div className="grid grid-cols-12 gap-4 px-4 py-2 text-xs font-bold uppercase tracking-wider" style={{ background: 'rgba(214, 40, 57, 0.2)', color: '#F7FAFC' }}>
+                        <div
+                            style={{
+                                background: 'rgba(255,255,255,0.9)',
+                                backdropFilter: 'blur(10px)'
+                            }}
+                        >
+                            {/* Table header */}
+                            <div
+                                className="grid grid-cols-12 gap-4 px-4 py-3 text-[10px] font-black uppercase tracking-widest"
+                                style={{
+                                    background: 'linear-gradient(90deg, rgba(221,160,221,0.3), rgba(255,105,180,0.2), rgba(152,216,200,0.3))',
+                                    color: '#6B4C7A',
+                                    borderBottom: '2px solid rgba(186, 85, 211, 0.2)'
+                                }}
+                            >
                                 <div className="col-span-4">Table</div>
-                                <div className="col-span-2 text-center">Dealer</div>
-                                <div className="col-span-2 text-center">Bets</div>
-                                <div className="col-span-2 text-center">Odds</div>
+                                <div className="col-span-2 text-center">Players</div>
+                                <div className="col-span-3 text-center">Bet Options</div>
+                                <div className="col-span-1 text-center">Min</div>
                                 <div className="col-span-2 text-center">Status</div>
                             </div>
 
-                            {casinoTables.map((table, index) => (
+                            {/* Table rows */}
+                            {liveTables.map((table, index) => (
                                 <div
                                     key={table.id}
-                                    className={`grid grid-cols-12 gap-4 px-4 py-3 items-center transition-all hover:bg-red-500/10 ${index !== casinoTables.length - 1 ? 'border-b border-red-500/20' : ''
-                                        }`}
+                                    className={`
+                                        grid grid-cols-12 gap-4 px-4 py-4 items-center transition-all duration-300
+                                        hover:bg-gradient-to-r hover:from-pink-50 hover:via-purple-50 hover:to-teal-50
+                                        ${index !== liveTables.length - 1 ? 'border-b border-purple-100' : ''}
+                                    `}
                                 >
+                                    {/* Table info */}
                                     <div className="col-span-4">
-                                        <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: '#FF4757' }}>
-                                            {table.game}
-                                        </div>
-                                        <div className="font-semibold truncate" style={{ color: '#F7FAFC' }}>
+                                        <div
+                                            className="text-[10px] font-bold uppercase tracking-wider mb-1 flex items-center gap-2"
+                                            style={{ color: '#BA55D3' }}
+                                        >
+                                            <span
+                                                className="w-2 h-2 rounded-full animate-pulse"
+                                                style={{ background: '#20B2AA' }}
+                                            />
                                             {table.table}
                                         </div>
+                                        <div className="font-black text-base" style={{ color: '#6B4C7A' }}>
+                                            {table.game}
+                                        </div>
+                                        <div className="text-xs mt-0.5" style={{ color: '#9370DB' }}>
+                                            Dealer: {table.dealer}
+                                        </div>
                                     </div>
 
+                                    {/* Players */}
                                     <div className="col-span-2 text-center">
-                                        <span className="text-sm font-medium" style={{ color: '#FFD700' }}>
-                                            {table.dealer}
-                                        </span>
-                                    </div>
-
-                                    <div className="col-span-2 text-center">
-                                        <span className="text-sm font-bold" style={{ color: '#FFD700' }}>
-                                            ${table.bets}
-                                        </span>
-                                    </div>
-
-                                    <div className="col-span-2 flex justify-center gap-1">
-                                        {table.odds.player && (
-                                            <button
-                                                onClick={() => addToBetSlip(`${table.game} - ${table.table}`, 'Player', table.odds.player!)}  // ✅ !
-                                                className="px-2 py-1 rounded transition-all hover:scale-105"
-                                                style={{ background: 'rgba(255,215,0,0.2)', border: '1px solid #FFD700', color: '#FFD700' }}
-                                            >
-                                                P: {table.odds.player!.toFixed(2)}  // ✅ !
-                                            </button>
-                                        )}
-                                        {table.odds.banker && (
-                                            <button
-                                                onClick={() => addToBetSlip(`${table.game} - ${table.table}`, 'Banker', table.odds.banker!)}  // ✅ !
-                                                className="px-2 py-1 rounded transition-all hover:scale-105"
-                                                style={{ background: 'rgba(34,197,94,0.2)', border: '1px solid #22C55E', color: '#22C55E' }}
-                                            >
-                                                B: {table.odds.banker!.toFixed(2)}  // ✅ !
-                                            </button>
-                                        )}
-                                    </div>
-
-
-                                    <div className="col-span-2 text-center">
-                                        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold backdrop-blur-sm"
+                                        <div
+                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full"
                                             style={{
-                                                background: table.status === 'CRASHING' ? 'rgba(255,71,87,0.3)' : 'rgba(34,197,94,0.3)',
-                                                color: table.status === 'CRASHING' ? '#FF4757' : '#22C55E',
-                                                border: `1px solid ${table.status === 'CRASHING' ? '#FF4757' : '#22C55E'}`
-                                            }}>
-                                            {table.multiplier?.crash ? `x${table.multiplier.crash.toFixed(2)}` : table.status}
+                                                background: 'linear-gradient(135deg, rgba(255,105,180,0.15), rgba(186,85,211,0.15))',
+                                                border: '1px solid rgba(255,105,180,0.3)'
+                                            }}
+                                        >
+                                            <span className="text-sm">👥</span>
+                                            <span className="text-sm font-bold" style={{ color: '#FF69B4' }}>
+                                                {table.players.toLocaleString()}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    {/* Bet Options */}
+                                    <div className="col-span-3 flex justify-center gap-1.5 flex-wrap">
+                                        {table.multiplier ? (
+                                            <button
+                                                onClick={() => addToBetSlip(table.game, 'Cashout', crashMultiplier)}
+                                                className="px-3 py-2 rounded-lg transition-all hover:scale-110 animate-pulse"
+                                                style={{
+                                                    background: 'linear-gradient(135deg, #FFD700, #FFA500)',
+                                                    border: '2px solid #FFD700',
+                                                    color: '#8B4513',
+                                                    boxShadow: '0 4px 15px rgba(255, 215, 0, 0.4)'
+                                                }}
+                                            >
+                                                <div className="text-[9px] font-bold">CRASH</div>
+                                                <div className="text-sm font-black">
+                                                    x{crashMultiplier.toFixed(2)}
+                                                </div>
+                                            </button>
+                                        ) : (
+                                            <>
+                                                {table.odds.red && (
+                                                    <button
+                                                        onClick={() => addToBetSlip(table.game, 'Red', table.odds.red!)}
+                                                        className="px-2.5 py-1.5 rounded-lg transition-all hover:scale-110"
+                                                        style={{
+                                                            background: 'linear-gradient(135deg, rgba(255,105,180,0.2), rgba(255,105,180,0.1))',
+                                                            border: '2px solid #FF69B4'
+                                                        }}
+                                                    >
+                                                        <div className="text-[9px] font-bold" style={{ color: '#FF69B4' }}>
+                                                            {table.odds.player ? 'P' : 'RED'}
+                                                        </div>
+                                                        <div className="text-sm font-black" style={{ color: '#FF69B4' }}>
+                                                            {table.odds.red.toFixed(2)}
+                                                        </div>
+                                                    </button>
+                                                )}
+                                                {table.odds.black && (
+                                                    <button
+                                                        onClick={() => addToBetSlip(table.game, 'Black', table.odds.black!)}
+                                                        className="px-2.5 py-1.5 rounded-lg transition-all hover:scale-110"
+                                                        style={{
+                                                            background: 'linear-gradient(135deg, rgba(107,76,122,0.2), rgba(107,76,122,0.1))',
+                                                            border: '2px solid #6B4C7A'
+                                                        }}
+                                                    >
+                                                        <div className="text-[9px] font-bold" style={{ color: '#6B4C7A' }}>
+                                                            {table.odds.banker ? 'B' : 'BLK'}
+                                                        </div>
+                                                        <div className="text-sm font-black" style={{ color: '#6B4C7A' }}>
+                                                            {table.odds.black.toFixed(2)}
+                                                        </div>
+                                                    </button>
+                                                )}
+                                                {table.odds.green && (
+                                                    <button
+                                                        onClick={() => addToBetSlip(table.game, 'Green', table.odds.green!)}
+                                                        className="px-2.5 py-1.5 rounded-lg transition-all hover:scale-110"
+                                                        style={{
+                                                            background: 'linear-gradient(135deg, rgba(32,178,170,0.2), rgba(32,178,170,0.1))',
+                                                            border: '2px solid #20B2AA'
+                                                        }}
+                                                    >
+                                                        <div className="text-[9px] font-bold" style={{ color: '#20B2AA' }}>
+                                                            {table.odds.tie ? 'TIE' : '0'}
+                                                        </div>
+                                                        <div className="text-sm font-black" style={{ color: '#20B2AA' }}>
+                                                            {table.odds.green.toFixed(2)}
+                                                        </div>
+                                                    </button>
+                                                )}
+                                            </>
+                                        )}
+                                    </div>
+
+                                    {/* Min Bet */}
+                                    <div className="col-span-1 text-center">
+                                        <span
+                                            className="text-sm font-bold"
+                                            style={{ color: '#20B2AA' }}
+                                        >
+                                            {table.minBet}
+                                        </span>
+                                    </div>
+
+                                    {/* Status */}
+                                    <div className="col-span-2 text-center">
+                                        <span
+                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold"
+                                            style={{
+                                                background: table.status === 'FLYING'
+                                                    ? 'linear-gradient(135deg, #FFD700, #FFA500)'
+                                                    : 'linear-gradient(135deg, rgba(32,178,170,0.2), rgba(60,179,113,0.2))',
+                                                color: table.status === 'FLYING' ? '#8B4513' : '#20B2AA',
+                                                border: table.status === 'FLYING'
+                                                    ? '2px solid #FFD700'
+                                                    : '2px solid #20B2AA',
+                                                boxShadow: table.status === 'FLYING'
+                                                    ? '0 4px 15px rgba(255, 215, 0, 0.4)'
+                                                    : 'none'
+                                            }}
+                                        >
+                                            <span
+                                                className={`w-2 h-2 rounded-full ${table.status === 'FLYING' ? 'animate-ping' : 'animate-pulse'}`}
+                                                style={{ background: table.status === 'FLYING' ? '#8B4513' : '#20B2AA' }}
+                                            />
+                                            {table.status}
                                         </span>
                                     </div>
                                 </div>
@@ -318,108 +613,268 @@ export default function CasinoPage() {
                         </div>
                     </div>
 
-                    {/* Casino Stats */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {/* Stats Row */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {[
-                            { label: 'Total Jackpot', value: '$2.8M', change: '+14%', color: '#FFD700' },
-                            { label: 'Live Players', value: '1,247', change: '+23%', color: '#FF4757' },
-                            { label: 'House Edge', value: '1.24%', change: '-0.3%', color: '#D62839' },
-                            { label: 'Max Win', value: 'x12,450', change: '+45%', color: '#FFA500' },
+                            { label: 'Total Jackpot', value: '$2.8M', change: '+14%', icon: '💎', gradient: 'linear-gradient(135deg, #FF69B4, #DA70D6)' },
+                            { label: 'Live Players', value: '5,847', change: '+23%', icon: '👥', gradient: 'linear-gradient(135deg, #20B2AA, #3CB371)' },
+                            { label: 'Biggest Win', value: '$47.2K', change: 'Today', icon: '🏆', gradient: 'linear-gradient(135deg, #FFD700, #FFA500)' },
+                            { label: 'Your Balance', value: '0 CRO', change: 'Connect', icon: '💰', gradient: 'linear-gradient(135deg, #9370DB, #BA55D3)' },
                         ].map((stat) => (
                             <div
                                 key={stat.label}
-                                className="p-4 rounded-lg transition-all hover:scale-105 backdrop-blur-sm"
+                                className="p-5 rounded-xl transition-all duration-300 hover:scale-105 cursor-pointer group"
                                 style={{
-                                    background: 'rgba(255,255,255,0.1)',
-                                    border: `2px solid ${stat.color}20`,
-                                    boxShadow: `0 4px 15px ${stat.color}20`
+                                    background: 'rgba(255,255,255,0.85)',
+                                    border: '3px solid #D8BFD8',
+                                    boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+                                    backdropFilter: 'blur(10px)'
                                 }}
                             >
-                                <div className="text-xs font-medium mb-1" style={{ color: '#F7FAFC' }}>
-                                    {stat.label}
+                                <div className="flex items-center justify-between mb-3">
+                                    <span
+                                        className="text-xs font-bold uppercase tracking-wider"
+                                        style={{ color: '#9370DB' }}
+                                    >
+                                        {stat.label}
+                                    </span>
+                                    <span
+                                        className="text-2xl group-hover:scale-125 transition-transform"
+                                    >
+                                        {stat.icon}
+                                    </span>
                                 </div>
-                                <div className="text-2xl font-black" style={{ color: stat.color }}>
+                                <div
+                                    className="text-3xl font-black mb-1 bg-clip-text text-transparent"
+                                    style={{ backgroundImage: stat.gradient }}
+                                >
                                     {stat.value}
                                 </div>
-                                {stat.change && (
-                                    <div className="text-xs font-semibold mt-1" style={{ color: '#FCD34D' }}>
-                                        {stat.change} today
-                                    </div>
-                                )}
+                                <div
+                                    className="text-xs font-bold"
+                                    style={{ color: '#20B2AA' }}
+                                >
+                                    {stat.change}
+                                </div>
                             </div>
                         ))}
                     </div>
                 </main>
 
-                {/* BetSlip Sidebar */}
-                <aside className="hidden xl:block w-72 ml-4 mt-4">
-                    <div className="rounded-lg overflow-hidden sticky top-4" style={{ border: '2px solid #FFD700' }}>
-                        <div className="flex items-center justify-between px-3 py-1.5" style={{ background: 'linear-gradient(180deg, #FFD700 0%, #FFA500 100%)' }}>
-                            <span className="text-xs font-bold text-white/90 tracking-wide">BETSLIP.EXE</span>
-                            <span className="w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center bg-black text-yellow-400">
+                {/* Bet Slip Sidebar */}
+                <aside className="hidden xl:block w-80 ml-4 mt-4">
+                    <div
+                        className="rounded-xl overflow-hidden sticky top-4"
+                        style={{
+                            border: '3px solid #D8BFD8',
+                            boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
+                        }}
+                    >
+                        {/* Window title bar */}
+                        <div
+                            className="flex items-center justify-between px-4 py-2"
+                            style={{
+                                background: 'linear-gradient(90deg, #98D8C8 0%, #20B2AA 100%)'
+                            }}
+                        >
+                            <span className="text-xs font-black text-white tracking-widest drop-shadow-md">
+                                BET_SLIP.EXE
+                            </span>
+                            <span
+                                className="w-7 h-7 rounded-full text-xs font-black flex items-center justify-center"
+                                style={{
+                                    background: 'white',
+                                    color: '#20B2AA',
+                                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                                }}
+                            >
                                 {betSlip.length}
                             </span>
                         </div>
 
-                        <div style={{ background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)' }}>
+                        {/* Bet slip content */}
+                        <div
+                            style={{
+                                background: 'rgba(255,255,255,0.95)',
+                                backdropFilter: 'blur(10px)'
+                            }}
+                        >
                             {betSlip.length === 0 ? (
-                                <div className="text-center py-8">
-                                    <div className="text-4xl mb-2 opacity-50 mx-auto w-16 h-16 rounded-full bg-gradient-to-r from-red-500/20 to-yellow-500/20 flex items-center justify-center">🎰</div>
-                                    <div className="text-sm" style={{ color: '#F7FAFC' }}>Click odds to add bets</div>
+                                <div className="text-center py-12 px-4">
+                                    <div
+                                        className="w-20 h-20 rounded-2xl mx-auto mb-4 flex items-center justify-center text-4xl"
+                                        style={{
+                                            background: 'linear-gradient(135deg, rgba(255,105,180,0.2), rgba(152,216,200,0.2))',
+                                            border: '3px solid #D8BFD8'
+                                        }}
+                                    >
+                                        🎰
+                                    </div>
+                                    <div className="text-sm font-bold mb-2" style={{ color: '#6B4C7A' }}>
+                                        No bets placed yet
+                                    </div>
+                                    <div className="text-xs" style={{ color: '#9370DB' }}>
+                                        Click on odds to add bets ✨
+                                    </div>
                                 </div>
                             ) : (
                                 <>
-                                    <div className="space-y-2 p-3">
+                                    <div className="p-4 space-y-3 max-h-80 overflow-y-auto">
                                         {betSlip.map((bet, index) => (
-                                            <div key={index} className="p-2.5 rounded-lg backdrop-blur-sm" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                                            <div
+                                                key={index}
+                                                className="p-3 rounded-xl transition-all hover:scale-[1.02]"
+                                                style={{
+                                                    background: 'linear-gradient(135deg, rgba(255,182,193,0.3), rgba(221,160,221,0.3))',
+                                                    border: '2px solid rgba(186, 85, 211, 0.3)'
+                                                }}
+                                            >
                                                 <div className="flex items-start justify-between gap-2">
                                                     <div className="flex-1 min-w-0">
-                                                        <div className="text-[10px] truncate" style={{ color: '#F7FAFC' }}>{bet.match}</div>
-                                                        <div className="font-semibold text-sm" style={{ color: '#FFFFFF' }}>{bet.selection}</div>
+                                                        <div className="text-[10px] truncate mb-1" style={{ color: '#9370DB' }}>
+                                                            {bet.table}
+                                                        </div>
+                                                        <div className="font-bold" style={{ color: '#6B4C7A' }}>
+                                                            {bet.selection}
+                                                        </div>
                                                     </div>
                                                     <button
                                                         onClick={() => removeBet(index)}
-                                                        className="text-red-400 hover:text-orange-400 transition-colors text-sm hover:scale-110"
+                                                        className="text-pink-400 hover:text-pink-600 transition-colors text-lg hover:scale-125"
                                                     >
                                                         ×
                                                     </button>
                                                 </div>
-                                                <div className="mt-1.5 text-lg font-black" style={{ color: '#FFD700' }}>
+                                                <div
+                                                    className="mt-2 text-xl font-black"
+                                                    style={{ color: '#FF69B4' }}
+                                                >
                                                     {bet.odds.toFixed(2)}
                                                 </div>
                                             </div>
                                         ))}
                                     </div>
 
-                                    <div className="pt-2 border-t border-red-500/30 p-3">
-                                        <div className="flex items-center justify-between text-sm mb-2">
-                                            <span style={{ color: '#F7FAFC' }}>Total Odds</span>
-                                            <span className="font-bold" style={{ color: '#FFD700' }}>
+                                    <div
+                                        className="p-4"
+                                        style={{ borderTop: '2px solid rgba(186, 85, 211, 0.2)' }}
+                                    >
+                                        <div className="flex items-center justify-between mb-3">
+                                            <span className="text-sm font-bold" style={{ color: '#6B4C7A' }}>
+                                                Total Odds
+                                            </span>
+                                            <span
+                                                className="text-xl font-black"
+                                                style={{ color: '#FF69B4' }}
+                                            >
                                                 {betSlip.reduce((acc, bet) => acc * bet.odds, 1).toFixed(2)}
                                             </span>
                                         </div>
+
                                         <input
                                             type="number"
-                                            placeholder="Stake CRO"
-                                            className="w-full px-3 py-2 rounded-lg text-sm outline-none backdrop-blur-sm"
-                                            style={{ background: 'rgba(255,255,255,0.1)', border: '2px solid rgba(255,255,255,0.2)', color: 'white' }}
+                                            placeholder="Stake (CRO)"
+                                            className="w-full px-4 py-3 rounded-xl text-sm font-bold outline-none transition-all focus:scale-[1.02]"
+                                            style={{
+                                                background: 'linear-gradient(135deg, rgba(255,182,193,0.3), rgba(221,160,221,0.3))',
+                                                border: '2px solid rgba(186, 85, 211, 0.3)',
+                                                color: '#6B4C7A'
+                                            }}
                                             defaultValue="0.01"
                                             step="0.01"
                                             min="0.01"
                                         />
-                                        <button className="w-full mt-2 py-3 rounded-lg font-bold text-white transition-all hover:scale-[1.02] backdrop-blur-sm"
+
+                                        <button
+                                            className="w-full mt-3 py-4 rounded-xl font-black text-white transition-all hover:scale-[1.02] text-sm tracking-wide"
                                             style={{
-                                                background: 'linear-gradient(135deg, #FF4757, #D62839)',
-                                                boxShadow: '0 4px 15px rgba(255, 71, 87, 0.4)'
-                                            }}>
-                                            Place Bet
+                                                background: 'linear-gradient(135deg, #FF69B4 0%, #DA70D6 50%, #BA55D3 100%)',
+                                                boxShadow: '0 8px 30px rgba(255, 105, 180, 0.4)'
+                                            }}
+                                        >
+                                            ✨ PLACE BET ✨
                                         </button>
                                     </div>
                                 </>
                             )}
                         </div>
                     </div>
+
+                    {/* Jackpot Ticker */}
+                    <div
+                        className="mt-4 rounded-xl overflow-hidden"
+                        style={{
+                            border: '3px solid #FFD700',
+                            boxShadow: '0 8px 32px rgba(255, 215, 0, 0.2)'
+                        }}
+                    >
+                        <div
+                            className="px-4 py-2 text-center"
+                            style={{
+                                background: 'linear-gradient(90deg, #FFD700 0%, #FFA500 50%, #FFD700 100%)'
+                            }}
+                        >
+                            <span className="text-xs font-black text-white tracking-widest drop-shadow-md">
+                                🏆 MEGA JACKPOT 🏆
+                            </span>
+                        </div>
+                        <div
+                            className="p-4 text-center"
+                            style={{
+                                background: 'rgba(255,255,255,0.95)'
+                            }}
+                        >
+                            <div
+                                className="text-3xl font-black animate-pulse"
+                                style={{
+                                    background: 'linear-gradient(135deg, #FFD700, #FFA500)',
+                                    backgroundClip: 'text',
+                                    WebkitBackgroundClip: 'text',
+                                    color: 'transparent'
+                                }}
+                            >
+                                $2,847,392
+                            </div>
+                            <div className="text-xs mt-2" style={{ color: '#9370DB' }}>
+                                Growing every second! 🚀
+                            </div>
+                        </div>
+                    </div>
                 </aside>
+            </div>
+
+            {/* Desktop Icons (decorative) */}
+            <div className="fixed right-8 top-32 z-5 hidden 2xl:flex flex-col gap-6">
+                {[
+                    { icon: '📁', label: 'My Bets' },
+                    { icon: '📊', label: 'History' },
+                    { icon: '⚙️', label: 'Settings' },
+                ].map((item) => (
+                    <div
+                        key={item.label}
+                        className="flex flex-col items-center gap-1 cursor-pointer group"
+                    >
+                        <div
+                            className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl transition-all group-hover:scale-110"
+                            style={{
+                                background: 'rgba(255,255,255,0.7)',
+                                border: '2px solid #D8BFD8',
+                                boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
+                            }}
+                        >
+                            {item.icon}
+                        </div>
+                        <span
+                            className="text-[10px] font-bold px-2 py-0.5 rounded"
+                            style={{
+                                background: 'rgba(255,255,255,0.8)',
+                                color: '#6B4C7A'
+                            }}
+                        >
+                            {item.label}
+                        </span>
+                    </div>
+                ))}
             </div>
         </div>
     )
