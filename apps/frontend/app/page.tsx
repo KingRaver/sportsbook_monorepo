@@ -158,10 +158,10 @@ export default function Home() {
                                 {['Live', 'Sports', 'Esports', 'Casino'].map((item, i) => (
                                     <Link
                                         key={item}
-                                        href={item === 'Live' ? '/live' : '#'}
+                                        href={`/${item.toLowerCase()}`}
                                         className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${i === 0
-                                                ? 'text-white'
-                                                : 'text-purple-400 hover:text-purple-600 hover:bg-purple-100'
+                                            ? 'text-white'
+                                            : 'text-purple-400 hover:text-purple-600 hover:bg-purple-100'
                                             }`}
                                         style={i === 0 ? {
                                             background: 'linear-gradient(135deg, #FF6B9D, #C44569)',
@@ -219,8 +219,8 @@ export default function Home() {
                                     key={sport.name}
                                     onClick={() => setSelectedSport(sport.name)}
                                     className={`group relative w-12 h-12 rounded-lg flex flex-col items-center justify-center transition-all ${selectedSport === sport.name
-                                            ? 'bg-gradient-to-br from-pink-200 to-purple-200'
-                                            : 'hover:bg-purple-50'
+                                        ? 'bg-gradient-to-br from-pink-200 to-purple-200'
+                                        : 'hover:bg-purple-50'
                                         }`}
                                 >
                                     <span className="text-xl">{sport.icon}</span>
