@@ -1,5 +1,4 @@
 "use client"
-import { BetSlip } from '@/components/bet-ui/BetSlip'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
@@ -393,8 +392,76 @@ export default function SportsPage() {
                 </main>
 
                 <aside className="hidden xl:block w-72 ml-4 mt-4">
-                    <BetSlip marketId="sports-main" sport="football" />
+                    <div className="rounded-lg overflow-hidden sticky top-4" style={{ border: '2px solid #FF6B9D' }}>
+                        {/* Window title bar */}
+                        <div className="flex items-center justify-between px-3 py-1.5" style={{ background: 'linear-gradient(180deg, #FF6B9D 0%, #C44569 100%)' }}>
+                            <span className="text-xs font-bold text-white/90 tracking-wide">BETSLIP.EXE</span>
+                            <span className="w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center bg-white" style={{ color: '#C44569' }}>
+                                {betSlip.length}
+                            </span>
+                        </div>
+
+                        {/* Custom bet slip content matching your state */}
+                        <div style={{ background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(10px)' }}>
+                            {betSlip.length === 0 ? (
+                                <div className="text-center py-8">
+                                    <div className="text-4xl mb-2 opacity-50">🎯</div>
+                                    <div className="text-sm" style={{ color: '#957DAD' }}>Click odds to add bets</div>
+                                </div>
+                            ) : (
+                                <>
+                                    <div className="space-y-2 p-3">
+                                        {betSlip.map((bet, index) => (
+                                            <div key={index} className="p-2.5 rounded-lg" style={{ background: '#F8E8F8', border: '1px solid #E0BBE4' }}>
+                                                <div className="flex items-start justify-between gap-2">
+                                                    <div className="flex-1 min-w-0">
+                                                        <div className="text-[10px] truncate" style={{ color: '#957DAD' }}>{bet.match}</div>
+                                                        <div className="font-semibold text-sm" style={{ color: '#6B4C7A' }}>{bet.selection}</div>
+                                                    </div>
+                                                    <button
+                                                        onClick={() => removeBet(index)}
+                                                        className="text-purple-300 hover:text-pink-400 transition-colors text-sm"
+                                                    >
+                                                        ×
+                                                    </button>
+                                                </div>
+                                                <div className="mt-1.5 text-lg font-bold" style={{ color: '#C44569' }}>
+                                                    {bet.odds.toFixed(2)}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className="pt-2 border-t border-purple-100 p-3">
+                                        <div className="flex items-center justify-between text-sm mb-2">
+                                            <span style={{ color: '#957DAD' }}>Total Odds</span>
+                                            <span className="font-bold" style={{ color: '#C44569' }}>
+                                                {betSlip.reduce((acc, bet) => acc * bet.odds, 1).toFixed(2)}
+                                            </span>
+                                        </div>
+                                        <input
+                                            type="number"
+                                            placeholder="Stake CRO"
+                                            className="w-full px-3 py-2 rounded-lg text-sm outline-none"
+                                            style={{ background: '#F8E8F8', border: '2px solid #E0BBE4', color: '#6B4C7A' }}
+                                            defaultValue="0.01"
+                                            step="0.01"
+                                            min="0.01"
+                                        />
+                                        <button className="w-full mt-2 py-3 rounded-lg font-bold text-white transition-all hover:scale-[1.02]"
+                                            style={{
+                                                background: 'linear-gradient(135deg, #FF6B9D, #C44569)',
+                                                boxShadow: '0 4px 15px rgba(196, 69, 105, 0.3)'
+                                            }}>
+                                            Place Bet
+                                        </button>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    </div>
                 </aside>
+
             </div>
         </div>
     )
