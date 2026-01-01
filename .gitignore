@@ -37,3 +37,11 @@ coverage/
 # OS
 .DS_Store
 Thumbs.db
+
+# Smart Contracts
+contract/.env.local
+contract/.env*.local
+contract/cache/
+contract/artifacts/
+contract/typechain-types/
+contract/deployment.json
