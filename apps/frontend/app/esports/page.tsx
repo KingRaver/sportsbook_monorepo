@@ -92,6 +92,7 @@ export default function EsportsPage() {
     const [betSlip, setBetSlip] = useState<{ match: string; selection: string; odds: number }[]>([])
     const [currentTime, setCurrentTime] = useState('')
     const [viewerCount, setViewerCount] = useState(247892)
+    const [currentDate, setCurrentDate] = useState('')
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -100,6 +101,11 @@ export default function EsportsPage() {
                 hour: '2-digit',
                 minute: '2-digit',
                 hour12: true
+            }))
+            setCurrentDate(now.toLocaleDateString('en-US', {
+                weekday: 'short',
+                month: 'short',
+                day: 'numeric'
             }))
         }, 1000)
         return () => clearInterval(timer)
