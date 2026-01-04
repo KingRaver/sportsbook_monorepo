@@ -16,8 +16,10 @@
 
 "use client";
 
+import type { Route } from 'next';
+import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
 	Area,
 	AreaChart,
@@ -59,6 +61,18 @@ interface MarketInfo {
 		source: string;
 	};
 }
+
+// ============================================================================
+// NAVIGATION
+// ============================================================================
+
+const navItems: { name: string; path: Route }[] = [
+	{ name: 'Live', path: '/' as Route },
+	{ name: 'Sports', path: '/sports' as Route },
+	{ name: 'Esports', path: '/esports' as Route },
+	{ name: 'Casino', path: '/casino' as Route },
+	{ name: 'Prediction', path: '/prediction' as Route }
+]
 
 // ============================================================================
 // MOCK DATA - Will be replaced with real data
@@ -163,8 +177,8 @@ const TimeFilterButton = ({
 	<button
 		onClick={onClick}
 		className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${active
-				? "bg-gradient-to-r from-[#FF6B9D] to-[#C44569] text-white shadow-md"
-				: "text-[#957DAD] hover:bg-[#F8E8F8]"
+			? "bg-gradient-to-r from-[#FF6B9D] to-[#C44569] text-white shadow-md"
+			: "text-[#957DAD] hover:bg-[#F8E8F8]"
 			}`}
 	>
 		{filter}
@@ -208,6 +222,26 @@ export default function PredictionMarketPage() {
 	const [betAmount, setBetAmount] = useState<string>("");
 	const [activeTab, setActiveTab] = useState<"buy" | "sell">("buy");
 	const [isPlacingBet, setIsPlacingBet] = useState(false);
+	const [currentTime, setCurrentTime] = useState('');
+	const [currentDate, setCurrentDate] = useState('');
+
+	// Update time and date
+	useEffect(() => {
+		const timer = setInterval(() => {
+			const now = new Date()
+			setCurrentTime(now.toLocaleTimeString('en-US', {
+				hour: '2-digit',
+				minute: '2-digit',
+				hour12: true
+			}))
+			setCurrentDate(now.toLocaleDateString('en-US', {
+				weekday: 'short',
+				month: 'short',
+				day: 'numeric'
+			}))
+		}, 1000)
+		return () => clearInterval(timer)
+	}, [])
 
 	// Calculate days remaining
 	const daysLeft = useMemo(() => {
@@ -270,32 +304,227 @@ export default function PredictionMarketPage() {
 	};
 
 	return (
-		<div className="min-h-screen pb-12">
-			{/* Floating decorative elements */}
-			<div className="fixed inset-0 pointer-events-none overflow-hidden">
-				<div className="absolute top-20 left-10 w-4 h-4 text-[#FF6B9D] opacity-40 sparkle">✦</div>
-				<div className="absolute top-40 right-20 w-3 h-3 text-[#7EC8E3] opacity-50 sparkle" style={{ animationDelay: "0.5s" }}>✦</div>
-				<div className="absolute bottom-40 left-1/4 w-5 h-5 text-[#E0BBE4] opacity-30 float">◇</div>
-				<div className="absolute top-1/3 right-1/3 w-4 h-4 text-[#FFB6C1] opacity-40 float" style={{ animationDelay: "2s" }}>✧</div>
+		<div className="min-h-screen overflow-hidden relative">
+			{/* Dreamy Vaporwave Background - Market Theme */}
+			<div className="fixed inset-0">
+				{/* Main gradient */}
+				<div
+					className="absolute inset-0"
+					style={{
+						background: 'linear-gradient(180deg, #E6E6FA 0%, #DDA0DD 15%, #FFB6C1 30%, #FFDAB9 50%, #B0E0E6 70%, #98D8C8 85%, #E6E6FA 100%)'
+					}}
+				/>
+
+				{/* Secondary overlay for depth */}
+				<div
+					className="absolute inset-0 opacity-50"
+					style={{
+						background: 'radial-gradient(ellipse at 30% 20%, rgba(230, 230, 250, 0.4) 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, rgba(255, 182, 193, 0.4) 0%, transparent 50%)'
+					}}
+				/>
+
+				{/* Retro grid overlay */}
+				<div
+					className="absolute inset-0 opacity-25"
+					style={{
+						backgroundImage: `
+							linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
+							linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)
+						`,
+						backgroundSize: '40px 40px'
+					}}
+				/>
+
+				{/* Floating clouds */}
+				<div className="absolute top-16 left-[8%] text-5xl opacity-70 animate-bounce" style={{ animationDuration: '6s' }}>☁️</div>
+				<div className="absolute top-32 right-[12%] text-4xl opacity-60 animate-bounce" style={{ animationDuration: '8s', animationDelay: '1s' }}>☁️</div>
+				<div className="absolute top-48 left-[25%] text-3xl opacity-50 animate-bounce" style={{ animationDuration: '7s', animationDelay: '2s' }}>☁️</div>
+
+				{/* Sparkles */}
+				<div className="absolute top-24 right-[30%] text-2xl opacity-60 animate-pulse">✦</div>
+				<div className="absolute top-40 left-[15%] text-xl opacity-50 animate-pulse" style={{ animationDelay: '0.5s' }}>✧</div>
+				<div className="absolute bottom-32 right-[20%] text-2xl opacity-60 animate-pulse" style={{ animationDelay: '1s' }}>✦</div>
+				<div className="absolute bottom-48 left-[35%] text-xl opacity-50 animate-pulse" style={{ animationDelay: '1.5s' }}>✧</div>
+
+				{/* Market-themed floating elements */}
+				<div className="absolute bottom-24 right-[15%] text-3xl opacity-40 animate-bounce" style={{ animationDuration: '5s' }}>📊</div>
+				<div className="absolute top-[45%] left-[5%] text-2xl opacity-30 animate-bounce" style={{ animationDuration: '6s', animationDelay: '1s' }}>🏆</div>
+				<div className="absolute bottom-[40%] right-[5%] text-2xl opacity-35 animate-bounce" style={{ animationDuration: '7s', animationDelay: '2s' }}>💎</div>
 			</div>
 
-			{/* Navigation Breadcrumb */}
-			<div className="max-w-7xl mx-auto px-4 py-4">
-				<nav className="flex items-center gap-2 text-sm">
-					<a href="/" className="text-[#957DAD] hover:text-[#6B4C7A] transition-colors">
-						Home
-					</a>
-					<span className="text-[#E0BBE4]">›</span>
-					<a href="/prediction" className="text-[#957DAD] hover:text-[#6B4C7A] transition-colors">
-						Markets
-					</a>
-					<span className="text-[#E0BBE4]">›</span>
-					<span className="text-[#6B4C7A] font-medium">Hackathon</span>
-				</nav>
+			{/* Main Desktop Window */}
+			<div className="relative z-10 mx-4 mt-4">
+				{/* Window Frame */}
+				<div
+					className="rounded-xl overflow-hidden"
+					style={{
+						background: 'linear-gradient(180deg, #E6E6FA 0%, #DDA0DD 100%)',
+						border: '3px solid #D8BFD8',
+						boxShadow: '0 8px 32px rgba(0,0,0,0.12), inset 0 2px 0 rgba(255,255,255,0.5)'
+					}}
+				>
+					{/* Window Title Bar */}
+					<div
+						className="flex items-center justify-between px-4 py-2"
+						style={{
+							background: 'linear-gradient(90deg, #FF6B9D 0%, #C44569 25%, #957DAD 50%, #7EC8E3 75%, #98D8C8 100%)',
+							borderBottom: '2px solid rgba(255,255,255,0.3)'
+						}}
+					>
+						<div className="flex items-center gap-3">
+							<span className="text-sm font-black text-white tracking-widest drop-shadow-md">
+								MARKET.EXE
+							</span>
+							<div
+								className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold"
+								style={{
+									background: 'linear-gradient(135deg, #10B981, #059669)',
+									color: 'white',
+									boxShadow: '0 2px 8px rgba(16, 185, 129, 0.4)'
+								}}
+							>
+								<span className="w-2 h-2 bg-white rounded-full animate-ping" />
+								ACTIVE
+							</div>
+						</div>
+						<div className="flex items-center gap-4">
+							<div className="hidden sm:flex items-center gap-2 text-xs font-mono text-white/90">
+								<span>{currentDate}</span>
+								<span className="text-white/60">|</span>
+								<span>{currentTime}</span>
+							</div>
+							<div className="flex gap-1.5">
+								<button className="w-4 h-4 rounded-sm bg-yellow-300 hover:bg-yellow-400 transition-colors flex items-center justify-center text-[10px] font-bold text-yellow-800">−</button>
+								<button className="w-4 h-4 rounded-sm bg-green-300 hover:bg-green-400 transition-colors flex items-center justify-center text-[10px] font-bold text-green-800">□</button>
+								<button className="w-4 h-4 rounded-sm bg-pink-300 hover:bg-pink-400 transition-colors flex items-center justify-center text-[10px] font-bold text-pink-800">×</button>
+							</div>
+						</div>
+					</div>
+
+					{/* Menu Bar */}
+					<div
+						className="flex items-center gap-6 px-4 py-1.5 text-xs font-medium"
+						style={{
+							background: 'rgba(255,255,255,0.85)',
+							borderBottom: '1px solid rgba(186, 85, 211, 0.2)',
+							color: '#6B4C7A'
+						}}
+					>
+						<span className="hover:text-pink-500 cursor-pointer transition-colors">File</span>
+						<span className="hover:text-pink-500 cursor-pointer transition-colors">Edit</span>
+						<span className="hover:text-pink-500 cursor-pointer transition-colors">View</span>
+						<span className="hover:text-pink-500 cursor-pointer transition-colors">Markets</span>
+						<span className="hover:text-pink-500 cursor-pointer transition-colors">Wallet</span>
+						<span className="hover:text-pink-500 cursor-pointer transition-colors">Help</span>
+					</div>
+
+					{/* Main Header Content */}
+					<div
+						className="flex items-center justify-between px-4 py-3"
+						style={{
+							background: 'rgba(255,255,255,0.9)',
+							backdropFilter: 'blur(10px)'
+						}}
+					>
+						<div className="flex items-center gap-8">
+							{/* Logo */}
+							<Link href={'/' as Route} className="flex items-center gap-3 group">
+								<div
+									className="w-11 h-11 rounded-xl flex items-center justify-center text-xl font-black text-white transition-all group-hover:scale-110 group-hover:rotate-3"
+									style={{
+										background: 'linear-gradient(135deg, #FF6B9D 0%, #C44569 50%, #957DAD 100%)',
+										boxShadow: '0 4px 15px rgba(196, 69, 105, 0.4), inset 0 2px 0 rgba(255,255,255,0.3)'
+									}}
+								>
+									μ
+								</div>
+								<div className="flex flex-col">
+									<span className="text-xl font-black tracking-tight leading-none">
+										<span style={{ color: '#C44569' }}>MICRO</span>
+										<span style={{ color: '#957DAD' }}>BETS</span>
+									</span>
+									<span className="text-[10px] font-bold tracking-widest" style={{ color: '#7EC8E3' }}>
+										📊 MARKET VIEW 📊
+									</span>
+								</div>
+							</Link>
+
+							{/* Navigation */}
+							<nav className="hidden md:flex items-center gap-1">
+								{navItems.map((item) => {
+									const isPrediction = item.name === 'Prediction'
+
+									return (
+										<Link
+											key={item.name}
+											href={item.path}
+											className={`
+												px-4 py-2 rounded-full text-sm font-bold transition-all duration-300
+												${isPrediction
+													? 'text-white scale-105'
+													: 'hover:scale-105'
+												}
+											`}
+											style={isPrediction ? {
+												background: 'linear-gradient(135deg, #957DAD 0%, #7EC8E3 50%, #98D8C8 100%)',
+												boxShadow: '0 4px 15px rgba(149, 125, 173, 0.4)'
+											} : {
+												color: '#957DAD',
+												background: 'transparent'
+											}}
+										>
+											{isPrediction && (
+												<span className="inline-block w-2 h-2 bg-white rounded-full mr-2 animate-pulse" />
+											)}
+											{item.name}
+										</Link>
+									)
+								})}
+							</nav>
+						</div>
+
+						{/* Right side */}
+						<div className="flex items-center gap-3">
+							<button
+								className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all hover:scale-105"
+								style={{
+									background: 'linear-gradient(135deg, rgba(255,107,157,0.2), rgba(196,69,105,0.2))',
+									border: '2px solid rgba(196, 69, 105, 0.3)',
+									color: '#C44569'
+								}}
+							>
+								<span>🔍</span>
+								<span>Search</span>
+							</button>
+							<button
+								className="px-5 py-2.5 rounded-full text-sm font-black text-white transition-all hover:scale-105"
+								style={{
+									background: 'linear-gradient(135deg, #FF6B9D 0%, #C44569 100%)',
+									boxShadow: '0 4px 15px rgba(196, 69, 105, 0.4)'
+								}}
+							>
+								🔮 Connect Wallet
+							</button>
+						</div>
+					</div>
+				</div>
 			</div>
 
 			{/* Main Content */}
-			<div className="max-w-7xl mx-auto px-4">
+			<div className="relative z-10 max-w-7xl mx-auto px-4 mt-4 pb-12">
+				{/* Navigation Breadcrumb */}
+				<nav className="flex items-center gap-2 text-sm mb-4">
+					<Link href="/" className="text-[#957DAD] hover:text-[#6B4C7A] transition-colors">
+						Home
+					</Link>
+					<span className="text-[#E0BBE4]">›</span>
+					<Link href="/prediction" className="text-[#957DAD] hover:text-[#6B4C7A] transition-colors">
+						Markets
+					</Link>
+					<span className="text-[#E0BBE4]">›</span>
+					<span className="text-[#6B4C7A] font-medium">Hackathon</span>
+				</nav>
+
 				<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
 					{/* ============================================ */}
@@ -568,8 +797,8 @@ export default function PredictionMarketPage() {
 									<button
 										onClick={() => setActiveTab("buy")}
 										className={`flex-1 py-3 text-sm font-bold rounded-l-lg transition-all ${activeTab === "buy"
-												? "bg-[#6B4C7A] text-white"
-												: "bg-[#F8E8F8] text-[#957DAD] hover:bg-[#E0BBE4]"
+											? "bg-[#6B4C7A] text-white"
+											: "bg-[#F8E8F8] text-[#957DAD] hover:bg-[#E0BBE4]"
 											}`}
 									>
 										Buy
@@ -577,8 +806,8 @@ export default function PredictionMarketPage() {
 									<button
 										onClick={() => setActiveTab("sell")}
 										className={`flex-1 py-3 text-sm font-bold rounded-r-lg transition-all ${activeTab === "sell"
-												? "bg-[#6B4C7A] text-white"
-												: "bg-[#F8E8F8] text-[#957DAD] hover:bg-[#E0BBE4]"
+											? "bg-[#6B4C7A] text-white"
+											: "bg-[#F8E8F8] text-[#957DAD] hover:bg-[#E0BBE4]"
 											}`}
 									>
 										Sell
@@ -590,8 +819,8 @@ export default function PredictionMarketPage() {
 									<button
 										onClick={() => setSelectedOutcome(selectedOutcome === "yes" ? null : "yes")}
 										className={`w-full p-4 rounded-xl border-2 transition-all flex items-center justify-between ${selectedOutcome === "yes"
-												? "border-[#10B981] bg-[#10B981]/10"
-												: "border-[#E0BBE4] bg-white hover:border-[#10B981]/50"
+											? "border-[#10B981] bg-[#10B981]/10"
+											: "border-[#E0BBE4] bg-white hover:border-[#10B981]/50"
 											}`}
 									>
 										<span className={`text-lg font-bold ${selectedOutcome === "yes" ? "text-[#10B981]" : "text-[#6B4C7A]"
@@ -607,8 +836,8 @@ export default function PredictionMarketPage() {
 									<button
 										onClick={() => setSelectedOutcome(selectedOutcome === "no" ? null : "no")}
 										className={`w-full p-4 rounded-xl border-2 transition-all flex items-center justify-between ${selectedOutcome === "no"
-												? "border-[#F43F5E] bg-[#F43F5E]/10"
-												: "border-[#E0BBE4] bg-white hover:border-[#F43F5E]/50"
+											? "border-[#F43F5E] bg-[#F43F5E]/10"
+											: "border-[#E0BBE4] bg-white hover:border-[#F43F5E]/50"
 											}`}
 									>
 										<span className={`text-lg font-bold ${selectedOutcome === "no" ? "text-[#F43F5E]" : "text-[#6B4C7A]"
@@ -679,12 +908,17 @@ export default function PredictionMarketPage() {
 								{/* Action Button */}
 								{!isConnected ? (
 									<div className="text-center">
-										<p className="text-sm text-[#957DAD] mb-3">Sign in to trade</p>
+										<p className="text-sm text-[#957DAD] mb-3">Connect your wallet to trade</p>
 										<p className="text-xs text-[#C9A0DC] mb-4">
-											You need to be signed in to buy or sell shares in this market.
+											You need to connect your wallet to buy or sell shares in this market.
 										</p>
-										<button className="w-full py-4 rounded-xl btn-pink text-lg">
-											Sign In to Trade
+										<button className="w-full py-4 rounded-xl text-lg font-bold text-white transition-all hover:scale-[1.02]"
+											style={{
+												background: 'linear-gradient(135deg, #FF6B9D 0%, #C44569 100%)',
+												boxShadow: '0 4px 15px rgba(196, 69, 105, 0.4)'
+											}}
+										>
+											🔮 Connect Wallet
 										</button>
 									</div>
 								) : (
@@ -692,10 +926,10 @@ export default function PredictionMarketPage() {
 										onClick={handlePlaceBet}
 										disabled={!selectedOutcome || !betAmount || isPlacingBet}
 										className={`w-full py-4 rounded-xl text-lg font-bold transition-all ${selectedOutcome && betAmount && !isPlacingBet
-												? selectedOutcome === "yes"
-													? "bg-gradient-to-r from-[#10B981] to-[#059669] text-white shadow-lg hover:shadow-xl"
-													: "bg-gradient-to-r from-[#F43F5E] to-[#DC2626] text-white shadow-lg hover:shadow-xl"
-												: "bg-[#E0BBE4] text-[#957DAD] cursor-not-allowed"
+											? selectedOutcome === "yes"
+												? "bg-gradient-to-r from-[#10B981] to-[#059669] text-white shadow-lg hover:shadow-xl"
+												: "bg-gradient-to-r from-[#F43F5E] to-[#DC2626] text-white shadow-lg hover:shadow-xl"
+											: "bg-[#E0BBE4] text-[#957DAD] cursor-not-allowed"
 											}`}
 									>
 										{isPlacingBet ? (
