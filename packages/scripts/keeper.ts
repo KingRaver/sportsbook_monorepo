@@ -1,5 +1,6 @@
 import * as dotenv from "dotenv";
-import hre, { ethers } from "hardhat";
+import hre from "hardhat";
+import { formatUnits, getContract } from "viem";
 
 // Load environment variables
 dotenv.config({ path: ".env.local" });
@@ -38,6 +39,16 @@ class DualSystemKeeper {
     private predictionMarketAddress: string | undefined;
     private pollingInterval: number = 30000; // 30 seconds
     private isRunning: boolean = false;
+    private publicClient: any;
+    private walletClient: any;
+
+    private getClients() {
+        if (!this.publicClient || !this.walletClient) {
+            throw new Error("❌ Keeper not initialized");
+        }
+
+        return { publicClient: this.publicClient, walletClient: this.walletClient };
+    }
 
     async initialize() {
         console.log("\n🔧 Initializing Dual System Keeper");
@@ -52,8 +63,16 @@ class DualSystemKeeper {
             );
         }
 
-        const [signer] = await ethers.getSigners();
-        console.log(`📋 Keeper running with: ${signer.address}`);
+        this.publicClient = await hre.viem.getPublicClient();
+        const [walletClient] = await hre.viem.getWalletClients();
+
+        if (!walletClient?.account) {
+            throw new Error("❌ No keeper account available");
+        }
+
+        this.walletClient = walletClient;
+
+        console.log(`📋 Keeper running with: ${walletClient.account.address}`);
         console.log(`   Network:              ${hre.network.name}`);
         console.log(`   MarketManager:        ${this.marketManagerAddress || "DISABLED"}`);
         console.log(`   PredictionMarket:     ${this.predictionMarketAddress || "DISABLED"}`);
@@ -69,16 +88,17 @@ class DualSystemKeeper {
         }
 
         try {
-            const [signer] = await ethers.getSigners();
-            const marketManager = await ethers.getContractAt(
-                "MarketManager",
-                this.marketManagerAddress,
-                signer
-            );
+            const { publicClient, walletClient } = this.getClients();
+            const marketManagerArtifact = await hre.artifacts.readArtifact("MarketManager");
+            const marketManager = getContract({
+                address: this.marketManagerAddress,
+                abi: marketManagerArtifact.abi,
+                client: { public: publicClient, wallet: walletClient }
+            });
 
             console.log("\n📊 [OLD SYSTEM] Checking MarketManager...");
 
-            const activeMarkets = await marketManager.getActiveMarkets();
+            const activeMarkets = await marketManager.read.getActiveMarkets();
             console.log(`   Found ${activeMarkets.length} active markets`);
 
             const now = Math.floor(Date.now() / 1000);
@@ -86,7 +106,7 @@ class DualSystemKeeper {
             let settledCount = 0;
 
             for (const marketId of activeMarkets) {
-                const market: OldMarket = await marketManager.getMarket(marketId);
+                const market: OldMarket = await marketManager.read.getMarket([marketId]);
 
                 if (market.isSettled) {
                     settledCount++;
@@ -124,18 +144,19 @@ class DualSystemKeeper {
         }
 
         try {
-            const [signer] = await ethers.getSigners();
-            const predictionMarket = await ethers.getContractAt(
-                "PredictionMarket",
-                this.predictionMarketAddress,
-                signer
-            );
+            const { publicClient, walletClient } = this.getClients();
+            const predictionMarketArtifact = await hre.artifacts.readArtifact("PredictionMarket");
+            const predictionMarket = getContract({
+                address: this.predictionMarketAddress,
+                abi: predictionMarketArtifact.abi,
+                client: { public: publicClient, wallet: walletClient }
+            });
 
             console.log("\n📊 [NEW SYSTEM] Checking PredictionMarket...");
 
             // Get current market from contract
             try {
-                const marketData = await predictionMarket.market();
+                const marketData = await predictionMarket.read.market();
 
                 const now = Date.now();
                 const endTime = Number(marketData.endTime) * 1000;
@@ -144,16 +165,16 @@ class DualSystemKeeper {
                 console.log(`   Market ID:         ${marketData.id}`);
                 console.log(`   Question:          ${marketData.question}`);
                 console.log(`   Status:            ${marketData.status}`);
-                console.log(`   YES Pool:          ${ethers.formatUnits(marketData.yesPool, 6)} USDT`);
-                console.log(`   NO Pool:           ${ethers.formatUnits(marketData.noPool, 6)} USDT`);
+                console.log(`   YES Pool:          ${formatUnits(marketData.yesPool, 6)} USDT`);
+                console.log(`   NO Pool:           ${formatUnits(marketData.noPool, 6)} USDT`);
 
                 const totalPool = Number(
-                    ethers.formatUnits(marketData.yesPool + marketData.noPool, 6)
+                    formatUnits(marketData.yesPool + marketData.noPool, 6)
                 );
                 const yesPercent =
                     totalPool > 0
                         ? (
-                            (Number(ethers.formatUnits(marketData.yesPool, 6)) / totalPool) *
+                            (Number(formatUnits(marketData.yesPool, 6)) / totalPool) *
                             100
                         ).toFixed(1)
                         : "0";
@@ -172,7 +193,7 @@ class DualSystemKeeper {
                 }
 
                 // Get total bet count
-                const betCount = await predictionMarket.getBetCount();
+                const betCount = await predictionMarket.read.getBetCount();
                 console.log(`   Total Bets Placed: ${betCount}`);
             } catch (error) {
                 console.log(`   ℹ️  Could not read market data (contract may not expose getters)`);

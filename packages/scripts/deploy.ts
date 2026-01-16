@@ -1,6 +1,7 @@
 import * as fs from "fs";
-import hre, { ethers } from "hardhat";
+import hre from "hardhat";
 import * as path from "path";
+import { formatEther, getContract, isAddress } from "viem";
 
 async function main() {
     console.log("\n🚀 Deploying PredictionMarket Contract");
@@ -15,11 +16,11 @@ async function main() {
         throw new Error("❌ GNOSIS_SAFE_ADDRESS is required in .env file");
     }
 
-    if (!ethers.isAddress(GNOSIS_SAFE_ADDRESS)) {
+    if (!isAddress(GNOSIS_SAFE_ADDRESS)) {
         throw new Error("❌ GNOSIS_SAFE_ADDRESS is not a valid Ethereum address");
     }
 
-    if (!ethers.isAddress(USDT_ADDRESS)) {
+    if (!isAddress(USDT_ADDRESS)) {
         throw new Error("❌ USDT_ADDRESS is not a valid Ethereum address");
     }
 
@@ -29,12 +30,19 @@ async function main() {
     console.log(`   USDT Address:      ${USDT_ADDRESS}`);
 
     // Get deployer account
-    const [deployer] = await ethers.getSigners();
-    console.log(`   Deployer:          ${deployer.address}`);
+    const publicClient = await hre.viem.getPublicClient();
+    const [walletClient] = await hre.viem.getWalletClients();
+
+    if (!walletClient?.account) {
+        throw new Error("❌ No deployer account available");
+    }
+
+    const deployerAddress = walletClient.account.address;
+    console.log(`   Deployer:          ${deployerAddress}`);
 
     // Get deployer balance
-    const balance = await ethers.provider.getBalance(deployer.address);
-    console.log(`   Balance:           ${ethers.formatEther(balance)} CRO`);
+    const balance = await publicClient.getBalance({ address: deployerAddress });
+    console.log(`   Balance:           ${formatEther(balance)} CRO`);
 
     if (balance === 0n) {
         throw new Error("❌ Deployer account has no balance. Fund your account with testnet CRO.");
@@ -44,36 +52,39 @@ async function main() {
     console.log("\n1️⃣  Deploying PredictionMarket contract...");
     console.log("   Compiling...");
 
-    const PredictionMarket = await ethers.getContractFactory("PredictionMarket");
+    const predictionMarketArtifact = await hre.artifacts.readArtifact("PredictionMarket");
 
     console.log("   Deploying...");
-    const predictionMarket = await PredictionMarket.deploy(
-        GNOSIS_SAFE_ADDRESS,
-        USDT_ADDRESS
-    );
+    const deployHash = await walletClient.deployContract({
+        abi: predictionMarketArtifact.abi,
+        bytecode: predictionMarketArtifact.bytecode as `0x${string}`,
+        args: [GNOSIS_SAFE_ADDRESS, USDT_ADDRESS]
+    });
 
     console.log("   Waiting for confirmation...");
-    const deploymentTx = await predictionMarket.deploymentTransaction();
+    const receipt = await publicClient.waitForTransactionReceipt({
+        hash: deployHash,
+        confirmations: 1
+    });
 
-    if (!deploymentTx) {
-        throw new Error("❌ Deployment transaction not found");
-    }
-
-    const receipt = await deploymentTx.wait(1);
-
-    if (!receipt || receipt.status === 0) {
+    if (receipt.status !== "success" || !receipt.contractAddress) {
         throw new Error("❌ Contract deployment failed");
     }
 
-    const contractAddress = await predictionMarket.getAddress();
+    const contractAddress = receipt.contractAddress;
+    const predictionMarket = getContract({
+        address: contractAddress,
+        abi: predictionMarketArtifact.abi,
+        client: { public: publicClient, wallet: walletClient }
+    });
 
     console.log(`   ✅ Deployed at: ${contractAddress}`);
-    console.log(`   Transaction:   ${receipt.hash}`);
+    console.log(`   Transaction:   ${receipt.transactionHash}`);
     console.log(`   Gas used:      ${receipt.gasUsed.toString()}`);
 
     // Verify deployment on chain
     console.log("\n2️⃣  Verifying contract on chain...");
-    const code = await ethers.provider.getCode(contractAddress);
+    const code = await publicClient.getCode({ address: contractAddress });
 
     if (code === "0x") {
         throw new Error("❌ No contract code found at deployment address");
@@ -86,8 +97,8 @@ async function main() {
 
     // Try to read stored values if contract has getters
     try {
-        const storedGnosisSafe = await predictionMarket.gnosisSafe();
-        const storedUSDT = await predictionMarket.usdt();
+        const storedGnosisSafe = await predictionMarket.read.gnosisSafe();
+        const storedUSDT = await predictionMarket.read.usdt();
 
         console.log(`   ✅ Gnosis Safe stored: ${storedGnosisSafe}`);
         console.log(`   ✅ USDT stored:       ${storedUSDT}`);
@@ -122,12 +133,12 @@ async function main() {
     // Save deployment info to file
     const deploymentInfo = {
         network: hre.network.name,
-        chainId: (await ethers.provider.getNetwork()).chainId,
+        chainId: await publicClient.getChainId(),
         contractAddress,
         gnosisSafe: GNOSIS_SAFE_ADDRESS,
         usdtAddress: USDT_ADDRESS,
-        deployedBy: deployer.address,
-        deploymentTx: receipt.hash,
+        deployedBy: deployerAddress,
+        deploymentTx: receipt.transactionHash,
         deploymentBlock: receipt.blockNumber,
         timestamp: new Date().toISOString(),
     };

@@ -1,6 +1,5 @@
-import "@nomicfoundation/hardhat-toolbox";
+import "@nomicfoundation/hardhat-viem";
 import "@nomicfoundation/hardhat-verify";
-import "@typechain/hardhat";
 import { HardhatUserConfig } from "hardhat/config";
 
 const config: HardhatUserConfig = {
@@ -27,10 +26,6 @@ const config: HardhatUserConfig = {
         hardhat: {
             chainId: 1337
         }
-    },
-    typechain: {
-        outDir: "typechain-types",
-        target: "ethers-v6"
     },
     paths: {
         sources: "./contracts",

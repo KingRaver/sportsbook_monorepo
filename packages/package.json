@@ -11,12 +11,11 @@
         "sync-abis": "hardhat export-abi"
     },
     "devDependencies": {
-        "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+        "@nomicfoundation/hardhat-network-helpers": "^1.0.12",
         "@nomicfoundation/hardhat-verify": "^2.0.0",
-        "hardhat": "^2.22.10",
-        "@typechain/hardhat": "^9.0.0",
-        "typechain": "^8.3.1",
-        "ethers": "^6.13.2"
+        "@nomicfoundation/hardhat-viem": "^2.0.0",
+        "hardhat": "^3.1.2",
+        "viem": "^2.20.0"
     },
     "dependencies": {
         "@chainlink/contracts": "1.2.0",
