@@ -1,5 +1,7 @@
 # Eden Haus – Prediction Market on Cronos
 
+[Eden Haus (live)](https://edenhaus.vercel.app/)
+
 Eden Haus is a **real-time prediction market** for live events, where one of the flagship experiences is a fully on-chain, x402‑powered sportsbook for micro-bets that resolve in seconds, not hours. It is built as a polyglot monorepo (Next.js + FastAPI + smart contracts) targeting Cronos, Chainlink SPORTS feeds, and the emerging x402 internet‑native payments standard.
 
 ***
