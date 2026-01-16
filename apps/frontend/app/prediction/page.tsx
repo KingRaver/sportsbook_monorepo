@@ -48,10 +48,10 @@ interface ScoreboardData {
 
 const MARKETS: Market[] = [
     {
-        id: "microbets-hackathon",
+        id: "edenhaus-hackathon",
         slug: "markets",
-        question: "Will MicroBets win the Cronos x402 Hackathon?",
-        shortTitle: "MicroBets Hackathon Win",
+        question: "Will Eden Haus win the Cronos x402 Hackathon?",
+        shortTitle: "Eden Haus Hackathon Win",
         odds: 2.38,
         pool: 1250,
         status: "active",
@@ -112,7 +112,7 @@ const navItems: { name: string; path: Route }[] = [
 // ============================================================================
 
 const MarketCard = ({ market }: { market: Market }) => {
-    const isHackathonMarket = market.id === "microbets-hackathon";
+    const isHackathonMarket = market.id === "edenhaus-hackathon";
 
     return (
         <Link
@@ -378,12 +378,12 @@ export default function PredictionPage() {
                                         boxShadow: '0 4px 15px rgba(149, 125, 173, 0.4), inset 0 2px 0 rgba(255,255,255,0.3)'
                                     }}
                                 >
-                                    μ
+                                    E
                                 </div>
                                 <div className="flex flex-col">
                                     <span className="text-xl font-black tracking-tight leading-none">
-                                        <span style={{ color: '#957DAD' }}>MICRO</span>
-                                        <span style={{ color: '#7EC8E3' }}>BETS</span>
+                                        <span style={{ color: '#957DAD' }}>EDEN</span>
+                                        <span style={{ color: '#7EC8E3' }}>HAUS</span>
                                     </span>
                                     <span className="text-[10px] font-bold tracking-widest" style={{ color: '#98D8C8' }}>
                                         🔮 PREDICTIONS 🔮
@@ -638,7 +638,7 @@ export default function PredictionPage() {
                                             FEATURED MARKET
                                         </p>
                                         <h3 className="text-2xl font-bold text-[#6B4C7A] group-hover:text-[#FF6B9D] transition-colors">
-                                            Will MicroBets win the Cronos x402 Hackathon?
+                                            Will Eden Haus win the Cronos x402 Hackathon?
                                         </h3>
                                         <div className="flex items-center gap-4 mt-3">
                                             <span className="px-3 py-1 rounded-full bg-white border border-[#E0BBE4] text-xs font-medium text-[#6B4C7A]">

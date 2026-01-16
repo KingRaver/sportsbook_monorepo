@@ -1,8 +1,8 @@
 /**
  * Prediction Market Page - XO Market Style
- * 
- * MicroBets Hackathon Market
- * "Will MicroBets win the Cronos x402 Hackathon?"
+ *
+ * Eden Haus Hackathon Market
+ * "Will Eden Haus win the Cronos x402 Hackathon?"
  * 
  * Features:
  * - Price history chart with Yes/No probability lines
@@ -79,10 +79,10 @@ const navItems: { name: string; path: Route }[] = [
 // ============================================================================
 
 const MARKET_DATA: MarketInfo = {
-	id: "microbets-hackathon-win",
-	question: "Will MicroBets win the Cronos x402 Hackathon?",
-	description: "Prediction market for the outcome of MicroBets in the DoraHacks Cronos x402 hackathon competition.",
-	creator: "@MicroBets",
+	id: "edenhaus-hackathon-win",
+	question: "Will Eden Haus win the Cronos x402 Hackathon?",
+	description: "Prediction market for the outcome of Eden Haus in the DoraHacks Cronos x402 hackathon competition.",
+	creator: "@EdenHaus",
 	createdAt: "2025-12-15T00:00:00Z",
 	resolutionDate: "2026-01-31T23:59:59Z",
 	totalPool: 1250,
@@ -93,7 +93,7 @@ const MARKET_DATA: MarketInfo = {
 	totalBets: 47,
 	rules: {
 		resolvesTo: "Yes",
-		criteria: "MicroBets places 1st in the Cronos x402 Hackathon on DoraHacks",
+		criteria: "Eden Haus places 1st in the Cronos x402 Hackathon on DoraHacks",
 		source: "https://dorahacks.io/hackathon/cronos-x402/detail",
 	},
 };
@@ -436,12 +436,12 @@ export default function PredictionMarketPage() {
 										boxShadow: '0 4px 15px rgba(196, 69, 105, 0.4), inset 0 2px 0 rgba(255,255,255,0.3)'
 									}}
 								>
-									μ
+									E
 								</div>
 								<div className="flex flex-col">
 									<span className="text-xl font-black tracking-tight leading-none">
-										<span style={{ color: '#C44569' }}>MICRO</span>
-										<span style={{ color: '#957DAD' }}>BETS</span>
+										<span style={{ color: '#C44569' }}>EDEN</span>
+										<span style={{ color: '#957DAD' }}>HAUS</span>
 									</span>
 									<span className="text-[10px] font-bold tracking-widest" style={{ color: '#7EC8E3' }}>
 										📊 MARKET VIEW 📊
